@@ -6,8 +6,8 @@
 
 #include "GutWin32.h"
 #include "Gut.h"
-#include "GutDX9.h"
-#include "GutDX10.h"
+//#include "GutDX9.h"
+//#include "GutDX10.h"
 #include "GutOpenGL.h"
 
 GutCallBack g_GutCallBack;
@@ -44,19 +44,24 @@ bool GutInitGraphicsDevice(const char *device)
 	strcpy(g_szDeviceName, device);
 	g_eDeviceType = GutGetGraphicsDeviceType(device);
 
-	switch(g_eDeviceType)
+//	switch(g_eDeviceType)
+//	{
+//	case GUT_OPENGL:
+//		return GutInitGraphicsDeviceOpenGL();
+//		break;
+//	case GUT_DX9:
+//		return GutInitGraphicsDeviceDX9();
+//		break;
+//	case GUT_DX10:
+//	#ifdef _ENABLE_DX10_
+//		return GutInitGraphicsDeviceDX10();
+//	#endif // _ENABLE_DX10_	
+//		break;
+//	}
+
+	if(g_eDeviceType==GUT_OPENGL)
 	{
-	case GUT_OPENGL:
 		return GutInitGraphicsDeviceOpenGL();
-		break;
-	case GUT_DX9:
-		return GutInitGraphicsDeviceDX9();
-		break;
-	case GUT_DX10:
-	#ifdef _ENABLE_DX10_
-		return GutInitGraphicsDeviceDX10();
-	#endif // _ENABLE_DX10_	
-		break;
 	}
 
 	g_eDeviceType = GUT_UNKNOWN;
@@ -70,19 +75,24 @@ bool GutInitGraphicsDevice(GutDeviceSpec &spec)
 	strcpy(g_szDeviceName, spec.m_szDevice);
 	g_eDeviceType = GutGetGraphicsDeviceType(spec.m_szDevice);
 
-	switch(g_eDeviceType)
+//	switch(g_eDeviceType)
+//	{
+//	case GUT_OPENGL:
+//		return GutInitGraphicsDeviceOpenGL(&spec);
+//		break;
+//	case GUT_DX9:
+//		return GutInitGraphicsDeviceDX9(&spec);
+//		break;
+//	case GUT_DX10:
+//	#ifdef _ENABLE_DX10_
+//		return GutInitGraphicsDeviceDX10(&spec);
+//	#endif // _ENABLE_DX10_	
+//		break;
+//	}
+
+	if(g_eDeviceType==GUT_OPENGL)
 	{
-	case GUT_OPENGL:
 		return GutInitGraphicsDeviceOpenGL(&spec);
-		break;
-	case GUT_DX9:
-		return GutInitGraphicsDeviceDX9(&spec);
-		break;
-	case GUT_DX10:
-	#ifdef _ENABLE_DX10_
-		return GutInitGraphicsDeviceDX10(&spec);
-	#endif // _ENABLE_DX10_	
-		break;
 	}
 
 	g_eDeviceType = GUT_UNKNOWN;
@@ -97,16 +107,16 @@ bool GutReleaseGraphicsDevice(void)
 	{
 		return GutReleaseGraphicsDeviceOpenGL();
 	}
-	else if ( !stricmp(g_szDeviceName, "dx9") )
-	{
-		return GutReleaseGraphicsDeviceDX9();
-	}
-	else if ( !stricmp(g_szDeviceName, "dx10") )
-	{
-	#ifdef _ENABLE_DX10_
-		return GutReleaseGraphicsDeviceDX10();
-	#endif
-	}
+//	else if ( !stricmp(g_szDeviceName, "dx9") )
+//	{
+//		return GutReleaseGraphicsDeviceDX9();
+//	}
+//	else if ( !stricmp(g_szDeviceName, "dx10") )
+//	{
+//	#ifdef _ENABLE_DX10_
+//		return GutReleaseGraphicsDeviceDX10();
+//	#endif
+//	}
 
 	return false;
 }
@@ -119,14 +129,14 @@ GutEnum GutGetGraphicsDeviceType(const char *device)
 		{
 			return GUT_OPENGL;
 		}
-		else if ( !stricmp(device, "dx9") )
-		{
-			return GUT_DX9;
-		}
-		else if ( !stricmp(device, "dx10") )
-		{
-			return GUT_DX10;
-		}
+	//	else if ( !stricmp(device, "dx9") )
+	//	{
+	//		return GUT_DX9;
+	//	}
+	//	else if ( !stricmp(device, "dx10") )
+	//	{
+	//		return GUT_DX10;
+	//	}
 		else
 		{
 			return GUT_UNKNOWN;
@@ -185,32 +195,36 @@ Matrix4x4 GutMatrixLookAtRH(Vector4 &eye, Vector4 &lookat, Vector4 &up)
 
 Matrix4x4 GutMatrixOrthoRH(float w, float h, float z_near, float z_far)
 {
-	switch(GutGetGraphicsDeviceType())
-	{
-	case GUT_OPENGL:
-		return GutMatrixOrthoRH_OpenGL(w, h, z_near, z_far);
-		break;
-	case GUT_DX9:
-	case GUT_DX10:
-	default:
-		return GutMatrixOrthoRH_DirectX(w, h, z_near, z_far);
-		break;
-	}
+	return GutMatrixOrthoRH_OpenGL(w, h, z_near, z_far);
+
+//	switch(GutGetGraphicsDeviceType())
+//	{
+//	case GUT_OPENGL:
+//		return GutMatrixOrthoRH_OpenGL(w, h, z_near, z_far);
+//		break;
+//	case GUT_DX9:
+//	case GUT_DX10:
+//	default:
+//		return GutMatrixOrthoRH_DirectX(w, h, z_near, z_far);
+//		break;
+//	}
 }
 
 Matrix4x4 GutMatrixPerspectiveRH(float fovy, float aspect, float z_near, float z_far)
 {
-	switch(GutGetGraphicsDeviceType())
-	{
-	case GUT_OPENGL:
-		return GutMatrixPerspectiveRH_OpenGL(fovy, aspect, z_near, z_far);
-		break;
-	case GUT_DX9:
-	case GUT_DX10:
-	default:
-		return GutMatrixPerspectiveRH_DirectX(fovy, aspect, z_near, z_far);
-		break;
-	}
+	return GutMatrixPerspectiveRH_OpenGL(fovy, aspect, z_near, z_far);
+
+//	switch(GutGetGraphicsDeviceType())
+//	{
+//	case GUT_OPENGL:
+//		return GutMatrixPerspectiveRH_OpenGL(fovy, aspect, z_near, z_far);
+//		break;
+//	case GUT_DX9:
+//	case GUT_DX10:
+//	default:
+//		return GutMatrixPerspectiveRH_DirectX(fovy, aspect, z_near, z_far);
+//		break;
+//	}
 }
 
 // Direct3D native left hand system

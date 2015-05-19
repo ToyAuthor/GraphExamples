@@ -3,7 +3,7 @@
 
 #if !defined(_ENABLE_GENERALCPU_)
 	#define _ENABLE_GENERALCPU_
-#endif 
+#endif
 
 #include "Vector4.h"
 
@@ -11,27 +11,54 @@ class Matrix4x4CPU;
 
 extern Matrix4x4CPU g_MatrixCPU_Identity;
 
-inline Vector4CPU operator*(Vector4CPU &v, Matrix4x4CPU &matrix);
-inline Matrix4x4CPU operator*(Matrix4x4CPU &a, Matrix4x4CPU &b);
+inline Vector4CPU operator*(Vector4CPU v, Matrix4x4CPU matrix);
+inline Matrix4x4CPU operator*(Matrix4x4CPU a, Matrix4x4CPU b);
 
 class Matrix4x4CPU
 {
 public:
-	union
-	{
-		struct
-		{
-			float m_00, m_01, m_02, m_03;
-			float m_10, m_11, m_12, m_13;
-			float m_20, m_21, m_22, m_23;
-			float m_30, m_31, m_32, m_33;
-		};
+//	union
+//	{
+//		struct
+//		{
+//			float m_00, m_01, m_02, m_03;
+//			float m_10, m_11, m_12, m_13;
+//			float m_20, m_21, m_22, m_23;
+//			float m_30, m_31, m_32, m_33;
+//		};
+//
+//		struct
+//		{
+//			Vector4CPU m_Vec0;
+//			Vector4CPU m_Vec1;
+//			Vector4CPU m_Vec2;
+//			Vector4CPU m_Vec3;
+//		};
+//	};
+	Vector4CPU m_Vec0;
+	Vector4CPU m_Vec1;
+	Vector4CPU m_Vec2;
+	Vector4CPU m_Vec3;
 
-		struct
-		{
-			Vector4CPU m_Vec0, m_Vec1, m_Vec2, m_Vec3;
-		};
-	};
+//	typedef m_Vec0.x m_00;
+//	typedef m_Vec0.y m_01;
+//	typedef m_Vec0.z m_02;
+//	typedef m_Vec0.w m_03;
+//
+//	typedef m_Vec1.x m_10;
+//	typedef m_Vec1.y m_11;
+//	typedef m_Vec1.z m_12;
+//	typedef m_Vec1.w m_13;
+//
+//	typedef m_Vec2.x m_20;
+//	typedef m_Vec2.y m_21;
+//	typedef m_Vec2.z m_22;
+//	typedef m_Vec2.w m_23;
+//
+//	typedef m_Vec3.x m_30;
+//	typedef m_Vec3.y m_31;
+//	typedef m_Vec3.z m_32;
+//	typedef m_Vec3.w m_33;
 
 public:
 	inline Matrix4x4CPU()
@@ -39,17 +66,29 @@ public:
 
 	}
 
+	inline Matrix4x4CPU(const Matrix4x4CPU &bro)
+	{
+		m_Vec0=bro.m_Vec0;
+		m_Vec1=bro.m_Vec1;
+		m_Vec2=bro.m_Vec2;
+		m_Vec3=bro.m_Vec3;
+	}
+
 	inline Matrix4x4CPU(
 		float f00, float f01, float f02, float f03,
 		float f10, float f11, float f12, float f13,
 		float f20, float f21, float f22, float f23,
 		float f30, float f31, float f32, float f33
-	)	
+	)
 	{
-		m_00 = f00; m_01 = f01; m_02 = f02; m_03 = f03;
-		m_10 = f10; m_11 = f11; m_12 = f12; m_13 = f13;
-		m_20 = f20; m_21 = f21; m_22 = f22; m_23 = f23;
-		m_30 = f30; m_31 = f31; m_32 = f32; m_33 = f33;
+//		m_00 = f00; m_01 = f01; m_02 = f02; m_03 = f03;
+//		m_10 = f10; m_11 = f11; m_12 = f12; m_13 = f13;
+//		m_20 = f20; m_21 = f21; m_22 = f22; m_23 = f23;
+//		m_30 = f30; m_31 = f31; m_32 = f32; m_33 = f33;
+		m_Vec0.Set(f00, f01, f02, f03);
+		m_Vec1.Set(f10, f11, f12, f13);
+		m_Vec2.Set(f20, f21, f22, f23);
+		m_Vec3.Set(f30, f31, f32, f33);
 	}
 
 	inline void Identity(void)
@@ -78,11 +117,11 @@ public:
 	inline void SetColumn(int column, Vector4CPU &vec)
 	{
 		assert(column>=0 && column<4);
-		float *p = &m_00 + column;
-		p[0] = vec.GetX(); 
-		p[4] = vec.GetY(); 
-		p[8] = vec.GetZ(); 
-		p[12] = vec.GetW(); 
+		float *p = &m_Vec0.x + column;
+		p[0] = vec.GetX();
+		p[4] = vec.GetY();
+		p[8] = vec.GetZ();
+		p[12] = vec.GetW();
 	}
 
 	inline Vector4CPU &GetRow(int row)
@@ -96,7 +135,7 @@ public:
 	{
 		assert(column>=0 && column<4);
 		Vector4CPU vec;
-		float *p = &m_00 + column;
+		float *p = &m_Vec0.x + column;
 
 		vec.SetX(p[0]);
 		vec.SetY(p[4]);
@@ -108,12 +147,12 @@ public:
 
 	inline Matrix4x4CPU &Transpose(void)
 	{
-		FastMath::Swap(m_01,m_10);
-		FastMath::Swap(m_02,m_20);
-		FastMath::Swap(m_03,m_30);
-		FastMath::Swap(m_12,m_21);
-		FastMath::Swap(m_13,m_31);
-		FastMath::Swap(m_23,m_32);
+		FastMath::Swap(m_Vec0.y,m_Vec1.x);
+		FastMath::Swap(m_Vec0.z,m_Vec2.x);
+		FastMath::Swap(m_Vec0.w,m_Vec3.x);
+		FastMath::Swap(m_Vec1.z,m_Vec2.y);
+		FastMath::Swap(m_Vec1.w,m_Vec3.y);
+		FastMath::Swap(m_Vec2.w,m_Vec3.z);
 
 		return *this;
 	}
@@ -138,25 +177,25 @@ public:
 
 		Matrix4x4CPU  local, final;
 
-		local.m_00 = ( x * x ) * ( 1.0f - fCos ) + fCos;
-		local.m_01 = ( x * y ) * ( 1.0f - fCos ) + (z * fSin);
-		local.m_02 = ( x * z ) * ( 1.0f - fCos ) - (y * fSin);
-		local.m_03 = 0.0f;
+		local.m_Vec0.x = ( x * x ) * ( 1.0f - fCos ) + fCos;
+		local.m_Vec0.y = ( x * y ) * ( 1.0f - fCos ) + (z * fSin);
+		local.m_Vec0.z = ( x * z ) * ( 1.0f - fCos ) - (y * fSin);
+		local.m_Vec0.w = 0.0f;
 
-		local.m_10 = ( y * x ) * ( 1.0f - fCos ) - (z * fSin);
-		local.m_11 = ( y * y ) * ( 1.0f - fCos ) + fCos ;
-		local.m_12 = ( y * z ) * ( 1.0f - fCos ) + (x * fSin);
-		local.m_13 = 0.0f;
+		local.m_Vec1.x = ( y * x ) * ( 1.0f - fCos ) - (z * fSin);
+		local.m_Vec1.y = ( y * y ) * ( 1.0f - fCos ) + fCos ;
+		local.m_Vec1.z = ( y * z ) * ( 1.0f - fCos ) + (x * fSin);
+		local.m_Vec1.w = 0.0f;
 
-		local.m_20 = ( z * x ) * ( 1.0f - fCos ) + (y * fSin);
-		local.m_21 = ( z * y ) * ( 1.0f - fCos ) - (x * fSin);
-		local.m_22 = ( z * z ) * ( 1.0f - fCos ) + fCos;
-		local.m_23 = 0.0f;
+		local.m_Vec2.x = ( z * x ) * ( 1.0f - fCos ) + (y * fSin);
+		local.m_Vec2.y = ( z * y ) * ( 1.0f - fCos ) - (x * fSin);
+		local.m_Vec2.z = ( z * z ) * ( 1.0f - fCos ) + fCos;
+		local.m_Vec2.w = 0.0f;
 
-		local.m_30 = 0.0f;
-		local.m_31 = 0.0f;
-		local.m_32 = 0.0f;
-		local.m_33 = 1.0f;
+		local.m_Vec3.x = 0.0f;
+		local.m_Vec3.y = 0.0f;
+		local.m_Vec3.w = 0.0f;
+		local.m_Vec3.w = 1.0f;
 
 		final = local * (*this);
 		*this = final;
@@ -172,25 +211,25 @@ public:
 		float fSin, fCos;
 		FastMath::SinCos(radian, fSin, fCos);
 
-		m_00 = ( x * x ) * ( 1.0f - fCos ) + fCos;
-		m_01 = ( x * y ) * ( 1.0f - fCos ) + (z * fSin);
-		m_02 = ( x * z ) * ( 1.0f - fCos ) - (y * fSin);
-		m_03 = 0.0f;
+		m_Vec0.x = ( x * x ) * ( 1.0f - fCos ) + fCos;
+		m_Vec0.y = ( x * y ) * ( 1.0f - fCos ) + (z * fSin);
+		m_Vec0.z = ( x * z ) * ( 1.0f - fCos ) - (y * fSin);
+		m_Vec0.w = 0.0f;
 
-		m_10 = ( y * x ) * ( 1.0f - fCos ) - (z * fSin);
-		m_11 = ( y * y ) * ( 1.0f - fCos ) + fCos ;
-		m_12 = ( y * z ) * ( 1.0f - fCos ) + (x * fSin);
-		m_13 = 0.0f;
+		m_Vec1.x = ( y * x ) * ( 1.0f - fCos ) - (z * fSin);
+		m_Vec1.y = ( y * y ) * ( 1.0f - fCos ) + fCos ;
+		m_Vec1.z = ( y * z ) * ( 1.0f - fCos ) + (x * fSin);
+		m_Vec1.w = 0.0f;
 
-		m_20 = ( z * x ) * ( 1.0f - fCos ) + (y * fSin);
-		m_21 = ( z * y ) * ( 1.0f - fCos ) - (x * fSin);
-		m_22 = ( z * z ) * ( 1.0f - fCos ) + fCos;
-		m_23 = 0.0f;
+		m_Vec2.x = ( z * x ) * ( 1.0f - fCos ) + (y * fSin);
+		m_Vec2.y = ( z * y ) * ( 1.0f - fCos ) - (x * fSin);
+		m_Vec2.z = ( z * z ) * ( 1.0f - fCos ) + fCos;
+		m_Vec2.w = 0.0f;
 
-		m_30 = 0.0f;
-		m_31 = 0.0f;
-		m_32 = 0.0f;
-		m_33 = 1.0f;
+		m_Vec3.x = 0.0f;
+		m_Vec3.y = 0.0f;
+		m_Vec3.z = 0.0f;
+		m_Vec3.w = 1.0f;
 	}
 
 	void Rotate( float x, float y, float z, float radian )
@@ -214,24 +253,24 @@ public:
 		float Temp10, Temp11, Temp12, Temp13;
 		float Temp20, Temp21, Temp22, Temp23;
 
-		Temp10 = m_10 * Cos + m_20 * Sin;
-		Temp11 = m_11 * Cos + m_21 * Sin;
-		Temp12 = m_12 * Cos + m_22 * Sin;
-		Temp13 = m_13 * Cos + m_23 * Sin;
+		Temp10 = m_Vec1.x * Cos + m_Vec2.x * Sin;
+		Temp11 = m_Vec1.y * Cos + m_Vec2.y * Sin;
+		Temp12 = m_Vec1.z * Cos + m_Vec2.z * Sin;
+		Temp13 = m_Vec1.w * Cos + m_Vec2.w * Sin;
 
-		Temp20 = m_10 *-Sin + m_20 * Cos;
-		Temp21 = m_11 *-Sin + m_21 * Cos;
-		Temp22 = m_12 *-Sin + m_22 * Cos;
-		Temp23 = m_13 *-Sin + m_23 * Cos;
+		Temp20 = m_Vec1.x *-Sin + m_Vec2.x * Cos;
+		Temp21 = m_Vec1.y *-Sin + m_Vec2.y * Cos;
+		Temp22 = m_Vec1.z *-Sin + m_Vec2.z * Cos;
+		Temp23 = m_Vec1.w *-Sin + m_Vec2.w * Cos;
 
-		m_10 = Temp10;
-		m_11 = Temp11;
-		m_12 = Temp12;
-		m_13 = Temp13;
-		m_20 = Temp20;
-		m_21 = Temp21;
-		m_22 = Temp22;
-		m_23 = Temp23;
+		m_Vec1.x = Temp10;
+		m_Vec1.y = Temp11;
+		m_Vec1.z = Temp12;
+		m_Vec1.w = Temp13;
+		m_Vec2.x = Temp20;
+		m_Vec2.y = Temp21;
+		m_Vec2.z = Temp22;
+		m_Vec2.w = Temp23;
 	}
 
 	void RotateX_Replace( const float radian )
@@ -253,24 +292,24 @@ public:
 		float Sin, Cos;
 		FastMath::SinCos(radian, Sin, Cos);
 
-		Temp00 = m_00 * Cos - m_20 * Sin;
-		Temp01 = m_01 * Cos - m_21 * Sin;
-		Temp02 = m_02 * Cos - m_22 * Sin;
-		Temp03 = m_03 * Cos - m_23 * Sin;
+		Temp00 = m_Vec0.x * Cos - m_Vec2.x * Sin;
+		Temp01 = m_Vec0.y * Cos - m_Vec2.y * Sin;
+		Temp02 = m_Vec0.z * Cos - m_Vec2.z * Sin;
+		Temp03 = m_Vec0.w * Cos - m_Vec2.w * Sin;
 
-		Temp20 = m_00 * Sin + m_20 * Cos;
-		Temp21 = m_01 * Sin + m_21 * Cos;
-		Temp22 = m_02 * Sin + m_22 * Cos;
-		Temp23 = m_03 * Sin + m_23 * Cos;
+		Temp20 = m_Vec0.x * Sin + m_Vec2.x * Cos;
+		Temp21 = m_Vec0.y * Sin + m_Vec2.y * Cos;
+		Temp22 = m_Vec0.z * Sin + m_Vec2.z * Cos;
+		Temp23 = m_Vec0.w * Sin + m_Vec2.w * Cos;
 
-		m_00 = Temp00;
-		m_01 = Temp01;
-		m_02 = Temp02;
-		m_03 = Temp03;
-		m_20 = Temp20;
-		m_21 = Temp21;
-		m_22 = Temp22;
-		m_23 = Temp23;
+		m_Vec0.x = Temp00;
+		m_Vec0.y = Temp01;
+		m_Vec0.z = Temp02;
+		m_Vec0.w = Temp03;
+		m_Vec2.x = Temp20;
+		m_Vec2.y = Temp21;
+		m_Vec2.z = Temp22;
+		m_Vec2.w = Temp23;
 	}
 
 	void RotateY_Replace( const float radian )
@@ -292,24 +331,24 @@ public:
 		float Sin, Cos;
 		FastMath::SinCos(radian, Sin, Cos);
 
-		Temp00 = m_00 * Cos + m_10 * Sin;
-		Temp01 = m_01 * Cos + m_11 * Sin;
-		Temp02 = m_02 * Cos + m_12 * Sin;
-		Temp03 = m_03 * Cos + m_13 * Sin;
+		Temp00 = m_Vec0.x * Cos + m_Vec1.x * Sin;
+		Temp01 = m_Vec0.y * Cos + m_Vec1.y * Sin;
+		Temp02 = m_Vec0.z * Cos + m_Vec1.z * Sin;
+		Temp03 = m_Vec0.w * Cos + m_Vec1.w * Sin;
 
-		Temp10 = m_00 *-Sin + m_10 * Cos;
-		Temp11 = m_01 *-Sin + m_11 * Cos;
-		Temp12 = m_02 *-Sin + m_12 * Cos;
-		Temp13 = m_03 *-Sin + m_13 * Cos;
+		Temp10 = m_Vec0.x *-Sin + m_Vec1.x * Cos;
+		Temp11 = m_Vec0.y *-Sin + m_Vec1.y * Cos;
+		Temp12 = m_Vec0.z *-Sin + m_Vec1.z * Cos;
+		Temp13 = m_Vec0.w *-Sin + m_Vec1.w * Cos;
 
-		m_00 = Temp00;
-		m_01 = Temp01;
-		m_02 = Temp02;
-		m_03 = Temp03;
-		m_10 = Temp10;
-		m_11 = Temp11;
-		m_12 = Temp12;
-		m_13 = Temp13;
+		m_Vec0.x = Temp00;
+		m_Vec0.y = Temp01;
+		m_Vec0.z = Temp02;
+		m_Vec0.w = Temp03;
+		m_Vec1.x = Temp10;
+		m_Vec1.y = Temp11;
+		m_Vec1.z = Temp12;
+		m_Vec1.w = Temp13;
 	}
 
 	void RotateZ_Replace( const float radian )
@@ -348,7 +387,7 @@ public:
 		m_Vec3.Set(0, 0, 0, 1);
 	}
 
-	inline Matrix4x4CPU &FastInvert(void)
+	inline Matrix4x4CPU FastInvert(void)
 	{
 		Vector4CPU pos = VectorInvertSign(m_Vec3);
 		m_Vec3 = g_MatrixCPU_Identity.m_Vec3;
@@ -359,7 +398,7 @@ public:
 		return *this;
 	}
 
-	Matrix4x4CPU &Invert(void);
+	Matrix4x4CPU Invert(void);
 
 	// this = T * this
 	void Translate(float x, float y, float z)
@@ -404,13 +443,13 @@ public:
 		m_Vec3 += m_Vec2 * dddd;
 	}
 
-	Vector4CPU RotateVector(Vector4CPU &v)
+	Vector4CPU RotateVector(Vector4CPU v)
 	{
 		Vector4CPU result;
 
-		result.x = v.x*m_00 + v.y*m_10 + v.z*m_20;
-		result.y = v.x*m_01 + v.y*m_11 + v.z*m_21;
-		result.z = v.x*m_02 + v.y*m_12 + v.z*m_22;
+		result.x = v.x*m_Vec0.x + v.y*m_Vec1.x + v.z*m_Vec2.x;
+		result.y = v.x*m_Vec0.y + v.y*m_Vec1.y + v.z*m_Vec2.y;
+		result.z = v.x*m_Vec0.z + v.y*m_Vec1.z + v.z*m_Vec2.z;
 		result.w = 1.0f;
 
 		return result;
@@ -428,7 +467,7 @@ public:
 		m_Vec2 = IdentityMatrix()[2];
 	}
 
-	void SetMatrix3x4(Matrix4x4CPU &mat)
+	void SetMatrix3x4(Matrix4x4CPU mat)
 	{
 		m_Vec0 = mat[0];
 		m_Vec1 = mat[1];
@@ -438,8 +477,8 @@ public:
 	void ConsoleOutput(void);
 
 	// operator
-	inline float &operator() (int i, int j)	
-	{ 
+	inline float &operator() (int i, int j)
+	{
 		assert(i>=0 && i<4);
 		assert(j>=0 && j<4);
 		return GetRow(i)[j];
@@ -450,7 +489,7 @@ public:
 		return GetRow(row);
 	}
 
-	inline Matrix4x4CPU &operator=(Matrix4x4CPU &rhs)
+	inline Matrix4x4CPU operator=(Matrix4x4CPU rhs)
 	{
 		m_Vec0 = rhs.m_Vec0;
 		m_Vec1 = rhs.m_Vec1;
@@ -460,7 +499,7 @@ public:
 		return *this;
 	}
 
-	inline Matrix4x4CPU &operator=(float f)
+	inline Matrix4x4CPU operator=(float f)
 	{
 		Vector4CPU ffff(f);
 
@@ -472,7 +511,7 @@ public:
 		return *this;
 	}
 
-	inline Matrix4x4CPU &operator+=(float f)
+	inline Matrix4x4CPU operator+=(float f)
 	{
 		Vector4CPU ffff(f);
 
@@ -484,7 +523,7 @@ public:
 		return *this;
 	}
 
-	inline Matrix4x4CPU &operator+=(Matrix4x4CPU &rhs)
+	inline Matrix4x4CPU operator+=(Matrix4x4CPU rhs)
 	{
 		m_Vec0 += rhs.m_Vec0;
 		m_Vec1 += rhs.m_Vec1;
@@ -494,7 +533,7 @@ public:
 		return *this;
 	}
 
-	inline Matrix4x4CPU &operator-=(float f)
+	inline Matrix4x4CPU operator-=(float f)
 	{
 		Vector4CPU ffff(f);
 
@@ -506,7 +545,7 @@ public:
 		return *this;
 	}
 
-	inline Matrix4x4CPU &operator-=(Matrix4x4CPU &rhs)
+	inline Matrix4x4CPU operator-=(Matrix4x4CPU &rhs)
 	{
 		m_Vec0 -= rhs.m_Vec0;
 		m_Vec1 -= rhs.m_Vec1;
@@ -516,7 +555,7 @@ public:
 		return *this;
 	}
 
-	inline Matrix4x4CPU &operator*=(float f)
+	inline Matrix4x4CPU operator*=(float f)
 	{
 		m_Vec0 *= f;
 		m_Vec1 *= f;
@@ -526,7 +565,7 @@ public:
 		return *this;
 	}
 
-	inline Matrix4x4CPU &operator*=(Matrix4x4CPU &rhs)
+	inline Matrix4x4CPU operator*=(Matrix4x4CPU rhs)
 	{
 		m_Vec0 = m_Vec0 * rhs;
 		m_Vec1 = m_Vec1 * rhs;
@@ -536,7 +575,7 @@ public:
 		return *this;
 	}
 
-	inline Matrix4x4CPU &operator/=(float f)
+	inline Matrix4x4CPU operator/=(float f)
 	{
 		m_Vec0 /= f;
 		m_Vec1 /= f;
@@ -548,35 +587,35 @@ public:
 
 };
 
-inline bool operator==(Matrix4x4CPU &a, Matrix4x4CPU &b)
+inline bool operator==(Matrix4x4CPU a, Matrix4x4CPU b)
 {
 	// true if all vectors equal to each other
 	bool result = a.m_Vec0==b.m_Vec0 && a.m_Vec1==b.m_Vec1 && a.m_Vec2==b.m_Vec2 && a.m_Vec3==b.m_Vec3;
 	return result;
 }
 
-inline bool operator!=(Matrix4x4CPU &a, Matrix4x4CPU &b)
+inline bool operator!=(Matrix4x4CPU a, Matrix4x4CPU b)
 {
 	// true if any one vector not-equal
 	bool result = a.m_Vec0!=b.m_Vec0 || a.m_Vec1!=b.m_Vec1 || a.m_Vec2!=b.m_Vec2 || a.m_Vec3!=b.m_Vec3;
 	return result;
 }
 
-inline Matrix4x4CPU operator+(Matrix4x4CPU &a, float f)
+inline Matrix4x4CPU operator+(Matrix4x4CPU a, float f)
 {
 	Matrix4x4CPU result = a;
 	result += f;
 	return result;
 }
 
-inline Matrix4x4CPU operator+(float f, Matrix4x4CPU &a)
+inline Matrix4x4CPU operator+(float f, Matrix4x4CPU a)
 {
 	Matrix4x4CPU result = a;
 	result += f;
 	return result;
 }
 
-inline Matrix4x4CPU operator+(Matrix4x4CPU &a, Matrix4x4CPU &b)
+inline Matrix4x4CPU operator+(Matrix4x4CPU a, Matrix4x4CPU b)
 {
 	Matrix4x4CPU result;
 
@@ -588,21 +627,21 @@ inline Matrix4x4CPU operator+(Matrix4x4CPU &a, Matrix4x4CPU &b)
 	return result;
 }
 
-inline Matrix4x4CPU operator-(Matrix4x4CPU &a, float f)
+inline Matrix4x4CPU operator-(Matrix4x4CPU a, float f)
 {
 	Matrix4x4CPU result = a;
 	result -= f;
 	return result;
 }
 
-inline Matrix4x4CPU operator-(float f, Matrix4x4CPU &a)
+inline Matrix4x4CPU operator-(float f, Matrix4x4CPU a)
 {
 	Matrix4x4CPU result = a;
 	result -= f;
 	return result;
 }
 
-inline Matrix4x4CPU operator-(Matrix4x4CPU &a, Matrix4x4CPU &b)
+inline Matrix4x4CPU operator-(Matrix4x4CPU a, Matrix4x4CPU b)
 {
 	Matrix4x4CPU result;
 
@@ -614,19 +653,19 @@ inline Matrix4x4CPU operator-(Matrix4x4CPU &a, Matrix4x4CPU &b)
 	return result;
 }
 
-inline Vector4CPU operator*(Vector4CPU &v, Matrix4x4CPU &m)
+inline Vector4CPU operator*(Vector4CPU v, Matrix4x4CPU m)
 {
 	Vector4CPU result;
 
-	result.x = v.x*m.m_00 + v.y*m.m_10 + v.z*m.m_20 + v.w*m.m_30;
-	result.y = v.x*m.m_01 + v.y*m.m_11 + v.z*m.m_21 + v.w*m.m_31;
-	result.z = v.x*m.m_02 + v.y*m.m_12 + v.z*m.m_22 + v.w*m.m_32;
-	result.w = v.x*m.m_03 + v.y*m.m_13 + v.z*m.m_23 + v.w*m.m_33;
+	result.x = v.x*m.m_Vec0.x + v.y*m.m_Vec1.x + v.z*m.m_Vec2.x + v.w*m.m_Vec3.x;
+	result.y = v.x*m.m_Vec0.y + v.y*m.m_Vec1.y + v.z*m.m_Vec2.y + v.w*m.m_Vec3.y;
+	result.z = v.x*m.m_Vec0.z + v.y*m.m_Vec1.z + v.z*m.m_Vec2.z + v.w*m.m_Vec3.z;
+	result.w = v.x*m.m_Vec0.w + v.y*m.m_Vec1.w + v.z*m.m_Vec2.w + v.w*m.m_Vec3.w;
 
 	return result;
 }
 
-inline Vector4CPU operator*(Matrix4x4CPU &matrix, Vector4CPU &vec)
+inline Vector4CPU operator*(Matrix4x4CPU matrix, Vector4CPU vec)
 {
 	Vector4CPU result;
 
@@ -638,7 +677,7 @@ inline Vector4CPU operator*(Matrix4x4CPU &matrix, Vector4CPU &vec)
 	return result;
 }
 
-inline Matrix4x4CPU operator*(Matrix4x4CPU &a, Matrix4x4CPU &b)
+inline Matrix4x4CPU operator*(Matrix4x4CPU a, Matrix4x4CPU b)
 {
 	Matrix4x4CPU result;
 
@@ -650,7 +689,7 @@ inline Matrix4x4CPU operator*(Matrix4x4CPU &a, Matrix4x4CPU &b)
 	return result;
 }
 
-inline Matrix4x4CPU operator*(Matrix4x4CPU &a, float f)
+inline Matrix4x4CPU operator*(Matrix4x4CPU a, float f)
 {
 	Matrix4x4CPU result;
 
@@ -662,7 +701,7 @@ inline Matrix4x4CPU operator*(Matrix4x4CPU &a, float f)
 	return result;
 }
 
-inline Matrix4x4CPU operator*(float f, Matrix4x4CPU &a)
+inline Matrix4x4CPU operator*(float f, Matrix4x4CPU a)
 {
 	Matrix4x4CPU result;
 
@@ -674,7 +713,7 @@ inline Matrix4x4CPU operator*(float f, Matrix4x4CPU &a)
 	return result;
 }
 
-inline Matrix4x4CPU operator/(Matrix4x4CPU &a, float f)
+inline Matrix4x4CPU operator/(Matrix4x4CPU a, float f)
 {
 	Matrix4x4CPU result;
 
@@ -688,7 +727,7 @@ inline Matrix4x4CPU operator/(Matrix4x4CPU &a, float f)
 	return result;
 }
 
-inline Matrix4x4CPU Matrix4x4Transpose(Matrix4x4CPU &matrix)
+inline Matrix4x4CPU Matrix4x4Transpose(Matrix4x4CPU matrix)
 {
 	Matrix4x4CPU result = matrix;
 	result.Transpose();

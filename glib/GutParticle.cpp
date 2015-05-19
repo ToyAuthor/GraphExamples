@@ -1,4 +1,5 @@
 #include <math.h>
+#include <algorithm>
 #include "Gut.h"
 #include "GutParticle.h"
 
@@ -41,10 +42,10 @@ void CGutParticle::Release(void)
 void CGutParticle::SetEmitter(sParticleEmitter &emitter)
 {
 	m_Emitter = emitter;
-	
-	float particlelife = max(m_Emitter.m_fParticleLife[0], m_Emitter.m_fParticleLife[1]);
+
+	float particlelife = std::max(m_Emitter.m_fParticleLife[0], m_Emitter.m_fParticleLife[1]);
 	float max_particles = ceil(particlelife * m_Emitter.m_fEmitRate);
-	
+
 	m_iNumMaxParticles = (int) max_particles;
 	m_iNumParticles = 0;
 
@@ -105,7 +106,7 @@ int CGutParticle::EmitParticles(float time_advance)
 	{
 		num_particles = m_iNumMaxParticles - m_iNumParticles;
 	}
-	
+
 	Vector4 vDir = m_Matrix[2];
 	Vector4 vPos = m_Matrix[3];
 
@@ -172,7 +173,7 @@ int CGutParticle::BuildMesh(Matrix4x4 &camera_matrix)
 		Vector4 vPos = m_pParticleArray[i].m_vPosition;
 		Vector4 vVec0 = camera_matrix[0] * size;
 		Vector4 vVec1 = camera_matrix[1] * size;
-		
+
 		Vector4 v0 = vPos - vVec0 * vHalf + vVec1 * vHalf;
 		Vector4 v1 = v0 - vVec1;
 		Vector4 v2 = v0 + vVec0;
@@ -211,7 +212,7 @@ int CGutParticle::BuildPointSprite(void)
 
 		int intensity = fFadeout * 255;
 		unsigned int color = intensity<<24 | intensity<<16 | intensity<<8 | intensity;
-		
+
 		// `設定位置跟顏色`
 		particle->m_vPosition.StoreXYZ(p->m_fPosition);
 		p->m_fSize = particle->m_fSize;

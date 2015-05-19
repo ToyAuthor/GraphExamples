@@ -1,3 +1,5 @@
+// 改成不需要組合語言
+
 #ifndef _FASTMATH_WIN32_
 #define _FASTMATH_WIN32_
 
@@ -19,18 +21,6 @@ template<class T> inline void Swap(T &a, T &b)
 	T c = b;
 	b = a;
 	a = c;
-
-	/*
-	__asm
-	{
-		mov eax, dword ptr[a];
-		mov ebx, dword ptr[b];
-		fld dword ptr[eax]
-		fld dword ptr[ebx]
-		fstp dword ptr[eax]
-		fstp dword ptr[ebx]
-	}
-	*/
 }
 
 inline float DegreeToRadian(float r)
@@ -57,52 +47,22 @@ inline float RadToDeg(float r)
 
 inline float Abs(float v)
 {
-	float result;
-	__asm
-	{
-		fld [v]
-		fabs
-		fstp [result]
-	}
-	return result;
+	return v<0 ? v*-1:v;
 }
 
 inline float Sqrt(float v)
 {
-	float result;
-	__asm
-	{
-		fld [v]
-		fsqrt
-		fstp [result]
-	}
-	return result;
+	return sqrt(v);
 }
 
 inline float ReciprocalSqrt(float v)
 {
-	float result;
-	__asm
-	{
-		fld [v]
-		fsqrt
-		fld1
-		fdivrp st(1),st
-		fstp [result]
-	}
-	return result;
+	return 1.0f/sqrt(v);
 }
 
 inline float Sin(float radian)
 {
-	float result;
-	__asm
-	{
-		fld [radian]
-		fsin
-		fstp [result]
-	}
-	return result;
+	return sin(radian);
 }
 
 // -pi < p_Angle < pi
@@ -121,14 +81,7 @@ inline float ASin(float v)
 
 inline float Cos(float radian)
 {
-	float result;
-	__asm
-	{
-		fld [radian]
-		fcos
-		fstp [result]
-	}
-	return result;
+	return cos(radian);
 }
 
 inline float ACos(float v)
@@ -139,136 +92,23 @@ inline float ACos(float v)
 
 inline void SinCos(float radian, float &sinvalue, float &cosvalue)
 {
-	unsigned short cwd_flag = 0;
-	
-	__asm
-	{
-		fstsw [cwd_flag]
-	}
-
-	int stacktop = (cwd_flag & 0x3800)>>11;
-
-	if ( stacktop < 7 )
-	{
-		__asm
-		{
-			mov eax, dword ptr[cosvalue]
-			mov ebx, dword ptr[sinvalue]
-			fld [radian]
-			fsincos
-			fstp dword ptr [eax]
-			fstp dword ptr [ebx]
-		}
-	}
-	else
-	{
-		float s0, s1;
-		__asm
-		{
-			fstp [s0]
-			fstp [s1]
-			mov eax, dword ptr[cosvalue]
-			mov ebx, dword ptr[sinvalue]
-			fld [radian]
-			fsincos
-			fstp dword ptr [eax]
-			fstp dword ptr [ebx]
-			fld [s1]
-			fld [s0]
-		}
-	}
+	sinvalue=sin(radian);
+	cosvalue=cos(radian);
 }
 
 inline float Tan(float radian)
 {
-	float result;
-
-	unsigned short cwd_flag = 0;
-
-	__asm
-	{
-		fstsw [cwd_flag]
-	}
-
-	int stacktop = (cwd_flag & 0x3800)>>11;
-	if ( stacktop < 7 )
-	{
-		__asm
-		{
-			fld [radian]
-			fptan
-			fstp [result]
-			fstp [result]
-		}
-	}
-	else
-	{
-		float s0,s1;
-		__asm
-		{
-			fstp [s0]
-			fstp [s1]
-			fld [radian]
-			fptan
-			fstp [result]
-			fstp [result]
-			fld [s1]
-			fld [s0]
-		}
-	}
-
-	return result;
+	return tan(radian);
 }
 
 inline float Cot(float radian)
 {
-	float result;
-
-	unsigned short cwd_flag = 0;
-	__asm
-	{
-		fstsw [cwd_flag]
-	}
-	int stacktop = (cwd_flag & 0x3800)>>11;
-	if ( stacktop < 7 )
-	{
-		__asm
-		{
-			fld [radian]
-			fptan
-			fdivrp st(1), st(0)
-			fstp [result]
-		}
-	}
-	else
-	{
-		float s0,s1;
-		__asm
-		{
-			fstp [s0]
-			fstp [s1]
-			fld [radian]
-			fptan
-			fdivrp st(1), st(0)
-			fstp [result]
-			fld [s1]
-			fld [s0]
-		}
-	}
-
-	return result;
+	return 1/tan(radian);
 }
 
 inline float ATan(float radian)
 {
-	float result;
-	__asm
-	{
-		fld [radian]
-		fpatan
-		fstp [result]
-	}
-	return result;
+	return atan(radian);
 }
 
 inline float Lerp(float a, float b, float t)

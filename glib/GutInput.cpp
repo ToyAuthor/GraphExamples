@@ -1,15 +1,17 @@
+#ifdef _WIN32
 #include <windows.h>
 
 #define DIRECTINPUT_VERSION  0x0800
 
 #include <dinput.h>
+#endif
 
 #include "Gut.h"
 #include "GutWin32.h"
 #include "GutInput.h"
 
-static LPDIRECTINPUT8       g_pDI    = NULL;         
-static LPDIRECTINPUTDEVICE8 g_pMouse = NULL;     
+static LPDIRECTINPUT8       g_pDI    = NULL;
+static LPDIRECTINPUTDEVICE8 g_pMouse = NULL;
 static LPDIRECTINPUTDEVICE8 g_pKeyboard = NULL;
 static LPDIRECTINPUTDEVICE8 g_pJoystick = NULL;
 
@@ -31,16 +33,16 @@ static BOOL CALLBACK EnumJoysticksCallback( const DIDEVICEINSTANCE* pdidInstance
     HRESULT hr;
     // Obtain an interface to the enumerated joystick.
     hr = g_pDI->CreateDevice( pdidInstance->guidInstance, &g_pJoystick, NULL );
-    if( FAILED(hr) ) 
+    if( FAILED(hr) )
         return DIENUM_CONTINUE;
     return DIENUM_STOP;
 }
 
 int GutInputRestore(void)
 {
-	if ( g_pMouse ) g_pMouse->Acquire(); 
+	if ( g_pMouse ) g_pMouse->Acquire();
 	if ( g_pJoystick ) g_pJoystick->Acquire();
-	if ( g_pKeyboard ) g_pKeyboard->Acquire(); 
+	if ( g_pKeyboard ) g_pKeyboard->Acquire();
 
 	return 1;
 }
@@ -57,12 +59,12 @@ int GutInputInit(void)
 	hr = DirectInput8Create( hinst, DIRECTINPUT_VERSION, IID_IDirectInput8, (void **)&g_pDI, NULL);
 	if ( FAILED(hr) )
 		return 0;
-	
+
 	// create keyboard device
 	hr = g_pDI->CreateDevice( GUID_SysKeyboard, &g_pKeyboard, NULL );
 	if ( FAILED(hr) )
 		return 0;
-	
+
 	if ( g_pKeyboard )
 	{
 		g_pKeyboard->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE );
@@ -110,17 +112,17 @@ int GutInputClose(void)
 	SAFE_RELEASE(g_pMouse);
 	SAFE_RELEASE(g_pKeyboard);
 	SAFE_RELEASE(g_pJoystick);
-	
+
 	return 1;
 }
 
 int GutReadMouse(GutMouseInfo *info)
 {
-    if( NULL == g_pMouse ) 
+    if( NULL == g_pMouse )
         return 0;
 
 	// DirectInput mouse state structure
-    DIMOUSESTATE2 dims2; 
+    DIMOUSESTATE2 dims2;
 
     // Get the input's device state, and put the state in dims
     ZeroMemory( &dims2, sizeof(dims2) );
@@ -155,7 +157,7 @@ int GutReadKeyboard(char buffer[256])
 	if ( FAILED(hr) )
 	{
 		hr = g_pKeyboard->Acquire();
-		for(int i=0; hr == DIERR_INPUTLOST && i<10; i++ ) 
+		for(int i=0; hr == DIERR_INPUTLOST && i<10; i++ )
 		{
 			hr = g_pKeyboard->Acquire();
 			if ( !FAILED(hr) ) break;
@@ -188,7 +190,7 @@ int GutReadJoystick(GutJoystickInfo *joystick)
         // we don't have any special reset that needs to be done. We
         // just re-acquire and try again.
         hr = g_pJoystick->Acquire();
-        if( FAILED(hr) )  
+        if( FAILED(hr) )
             return 0;
     }
 

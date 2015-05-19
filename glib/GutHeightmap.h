@@ -22,7 +22,7 @@ protected:
 
 	int m_iArrayWidth, m_iArrayHeight;
 	int m_iMeshGridsX, m_iMeshGridsY;
-	
+
 	int m_iNumVertices;
 	int m_iNumIndices;
 	int m_iNumFaces;
@@ -31,10 +31,10 @@ protected:
 	{
 		unsigned char *m_pHeightUINT8;
 		unsigned short *m_pHeightUINT16;
-		unsigned float *m_pHeightFLOAT32;
+		         float *m_pHeightFLOAT32;
 	};
 
-	enum HeightmapFMT 
+	enum HeightmapFMT
 	{
 		HEIGHTMAP_UINT8,
 		HEIGHTMAP_UINT16,
@@ -54,8 +54,8 @@ protected:
 public:
 	CGutHeightmap(void);
 	~CGutHeightmap();
-	
-	void SetRange(Vector4 &vMin, Vector4 &vMax) { m_vMin = vMin; m_vMax = vMax; m_vDiff = m_vMax - m_vMin; };
+
+	void SetRange(Vector4 vMin, Vector4 vMax) { m_vMin = vMin; m_vMax = vMax; m_vDiff = m_vMax - m_vMin; };
 	bool LoadHeightmapTexture(const char *filename);
 	sTerrainVertexProc TerrainVertex(float tx, float ty);
 

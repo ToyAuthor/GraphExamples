@@ -1,4 +1,5 @@
 #include <string.h>
+#include <stdlib.h>
 
 #include "Gut.h"
 #include "GutModel.h"
@@ -81,7 +82,7 @@ void sModelMesh::Load_ASCII(FILE *pFile)
 
 	fgets(szBuffer, BufferSize, pFile); // buffers n
 	sscanf(szBuffer, "%s %d", sz_Tag, &m_iNumVertexChunks);
-	
+
 	m_iNumFaces = 0;
 	m_iNumVertices = 0;
 
@@ -98,10 +99,10 @@ void sModelMesh::Load_ASCII(FILE *pFile)
 			sModelVertexChunk *pBuffer = m_pVertexChunks + i;
 			fgets(szBuffer, BufferSize, pFile); // vertices n
 			sscanf(szBuffer, "%s %d", sz_Tag, &pBuffer->m_iNumVertices);
-			fgets(szBuffer, BufferSize, pFile); // format 
-			sscanf(szBuffer, "%s %s", sz_Tag, sz_Content); 
+			fgets(szBuffer, BufferSize, pFile); // format
+			sscanf(szBuffer, "%s %s", sz_Tag, sz_Content);
 			fgets(szBuffer, BufferSize, pFile); // {
-			
+
 			m_iNumVertices += pBuffer->m_iNumVertices;
 
 			bool bVertex = false;
@@ -195,7 +196,7 @@ void sModelMesh::Load_ASCII(FILE *pFile)
 			for ( j=0; j<pBuffer->m_iNumVertices; j++ )
 			{
 				sModelVertex *pVertex = pBuffer->m_pVertexArray + j;
-				
+
 				Vector4 &position = pVertex->m_Position;
 				Vector4 &normal = pVertex->m_Normal;
 				Vector4 &color = pVertex->m_Color;
@@ -252,7 +253,7 @@ void sModelMesh::Load_ASCII(FILE *pFile)
 				if ( (j & 0xff)==0 )
 					printf(".");
 			}
-			
+
 			fgets(szBuffer, BufferSize, pFile); // }
 
 			fgets(szBuffer, BufferSize, pFile); // triangle_list_indices n
@@ -386,7 +387,7 @@ bool CGutModel::LoadMaterial_ASCII(void)
 
 			fgets(szBuffer, 128, m_pFile); // cullface
 			sscanf(szBuffer, "%s %s %s", szTag, szTag, szContent);
-			
+
 			if ( !strcmp(szContent, "on") )
 				pMtl->m_bCullFace = true;
 			else
@@ -437,7 +438,7 @@ bool CGutModel::LoadMesh_ASCII(void)
 	fgets(szBuffer, 128, m_pFile); // {
 	fgets(szBuffer, 128, m_pFile); // meshes n
 	sscanf(szBuffer, "%s %d", sz_Tag, &m_iNumMeshes);
-	
+
 	m_iNumFaces = 0;
 	m_iNumVertices = 0;
 
@@ -471,20 +472,20 @@ bool CGutModel::Load_ASCII(const char *filename)
 	m_pFile = fopen(filename, "rt");
 	if ( m_pFile==NULL )
 		return false;
-	
+
 	printf("Loading model %s\n", filename);
 
 	char szBuffer[128];
 	char szTag[64], szChunkID[64];
 
 	fgets(szBuffer, 128, m_pFile); // version
-	
+
 	while(!feof(m_pFile))
 	{
 		fgets(szBuffer, 128, m_pFile);
 		if ( feof(m_pFile) )
 			break;
-		sscanf(szBuffer, "%s %s", szTag, szChunkID);	
+		sscanf(szBuffer, "%s %s", szTag, szChunkID);
 		if ( !strcmp(szTag, "Begin") )
 		{
 			if ( !strcmp(szChunkID, "Material") )
@@ -499,7 +500,7 @@ bool CGutModel::Load_ASCII(const char *filename)
 	}
 
 	m_vSize = m_vMax - m_vMin;
-	printf("%d materials, %d vertices, %d faces, size (%6.3f,%6.3f,%6.3f)\n", 
+	printf("%d materials, %d vertices, %d faces, size (%6.3f,%6.3f,%6.3f)\n",
 		m_iNumMaterials, m_iNumVertices, m_iNumFaces,
 		m_vSize[0], m_vSize[1], m_vSize[2]);
 
@@ -610,7 +611,7 @@ const sVertexDecl *CGutModel::GetVertexFormat(void)
 bool CGutModel::CreateSphere(float radius, sVertexDecl *pVertexDecl, int stacks, int slices)
 {
 	Release();
-	
+
 	m_pMeshArray = new sModelMesh[1];
 	sModelMesh *pMesh = m_pMeshArray;
 	if ( NULL==pMesh )
@@ -620,7 +621,7 @@ bool CGutModel::CreateSphere(float radius, sVertexDecl *pVertexDecl, int stacks,
 	sModelVertexChunk *pVertexChunk = m_pMeshArray[0].m_pVertexChunks;
 	if ( NULL==pVertexChunk )
 		return false;
-	
+
 	if ( pVertexDecl )
 		pVertexChunk->m_VertexDecl = *pVertexDecl;
 
@@ -669,7 +670,7 @@ bool CGutModel::CreateSphere(float radius, sVertexDecl *pVertexDecl, int stacks,
 	float te = FastMath::DegToRad(theta_end_degree);
 	float ps = FastMath::DegToRad(phi_start_degree);
 	float pe = FastMath::DegToRad(phi_end_degree);
-	
+
 	float theta_total = te - ts;
 	float phi_total = pe - ps;
 	float theta_inc = theta_total/stacks;
@@ -679,7 +680,7 @@ bool CGutModel::CreateSphere(float radius, sVertexDecl *pVertexDecl, int stacks,
 	float ty_step = -1.0f/(float)slices;
 	float tx_start = 1.0f;
 	float tx_step = -1.0f/(float)stacks;
-	
+
 	Vector4 vTexcoord(tx_start, ty_start, 0.0f);
 
 	int i,j;

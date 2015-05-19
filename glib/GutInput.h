@@ -1,16 +1,18 @@
 #ifndef _GUTINPUT_
 #define _GUTINPUT_
 
+#ifdef _WIN32
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
+#endif
 
 struct GutMouseInfo
 {
-	// ·Æ¹«¬Û¹ï²¾°Êªº¦ì¸m
+	// æ»‘é¼ ç›¸å°ç§»å‹•çš„ä½ç½®
 	int x,y;
-	// ·Æ¹«ºu½üªººu°Êª¬ºA
+	// æ»‘é¼ æ»¾è¼ªçš„æ»¾å‹•ç‹€æ…‹
 	int z;
-	// ·Æ¹««ö¶sªºª¬ºA
+	// æ»‘é¼ æŒ‰éˆ•çš„ç‹€æ…‹
 	unsigned char button[3];
 };
 
@@ -208,4 +210,4 @@ void GutRegisterKeyPressed(int key, void (*pKeyDownPressed)(void));
 #define GUTKEY_DOWNARROW       GUTKEY_DOWN            /* DownArrow on arrow keypad */
 #define GUTKEY_PGDN            GUTKEY_NEXT            /* PgDn on arrow keypad */
 
-#endif // _GUTINPUT_
+#endif

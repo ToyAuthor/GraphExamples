@@ -13,7 +13,7 @@ struct sModelVertexChunk_OpenGL
 	GLuint m_VertexBufferID;
 	GLuint m_IndexBufferID;
 
-	// µ¹¤£¤ä´© vertex buffer object ªº¾÷¾¹¨Ï¥Î.
+	// çµ¦ä¸æ”¯æ´ vertex buffer object çš„æ©Ÿå™¨ä½¿ç”¨.
 	void *m_pVertexBuffer;
 	unsigned short *m_pIndexBuffer;
 

@@ -14,7 +14,7 @@ CGutFont::CGutFont(void)
 	m_pVertexArray = NULL;
 	m_pIndexArray = NULL;
 
-	SetFontTextureLayout(16, 8, 0); 
+	SetFontTextureLayout(16, 8, 0);
 	SetFontSize(32, 32);
 	SetFontAdvance(32, 32);
 	SetConsoleResolution(512, 512);
@@ -52,7 +52,7 @@ void CGutFont::Release(void)
 void CGutFont::SetConsoleSize(int w, int h)
 {
 	Release();
-	
+
 	m_iNumRows = h;
 	m_iNumColumns = w;
 	m_pContent = new WCHAR[w*h];
@@ -96,20 +96,20 @@ void CGutFont::SetFontTextureLayout(int w, int h, int ascii_begin)
 
 bool CGutFont::AccessTexture(WCHAR c, int &x, int &y)
 {
-	// m_iAsciiBegin«ü¦r«¬ÀÉ¤¤²Ä¤@­Ó¦r¥À©Ò¥NªíªºASCII½X
+	// m_iAsciiBeginæŒ‡å­—å‹æª”ä¸­ç¬¬ä¸€å€‹å­—æ¯æ‰€ä»£è¡¨çš„ASCIIç¢¼
 	int offset = c - m_iAsciiBegin;
 
 	if ( offset < m_iNumCharactersSet )
 	{
-		// ­pºâ¥X¤å¦r¦b¶K¹Ï¤¤ªº¦ì¸m
-		// layoutW«ü¦b¤ô¥­¤è­±±Æ¦C¤F´X­Ó¦r¥À
+		// è¨ˆç®—å‡ºæ–‡å­—åœ¨è²¼åœ–ä¸­çš„ä½ç½®
+		// layoutWæŒ‡åœ¨æ°´å¹³æ–¹é¢æ’åˆ—äº†å¹¾å€‹å­—æ¯
 		y = offset / m_iLayoutW;
 		x = offset % m_iLayoutW;
 		return true;
 	}
 	else
 	{
-		// ¤£¦b¦r«¬ÀÉ¸Ì
+		// ä¸åœ¨å­—å‹æª”è£¡
 		x = y = 0;
 		return false;
 	}
@@ -119,7 +119,7 @@ void CGutFont::BuildMesh(void)
 {
 	m_iNumCharacters = 0;
 	int row,column;
-	
+
 	float fTexW = 1.0f/(float)m_iLayoutW;
 	float fTexH = 1.0f/(float)m_iLayoutH;
 	float fX = 0;
@@ -130,42 +130,42 @@ void CGutFont::BuildMesh(void)
 
 	for ( int y=0; y<m_iNumLines; y++ )
 	{
-		// `¨ú¥X³o¤@¦æ`
+		// `å–å‡ºé€™ä¸€è¡Œ`
 		WCHAR *line = GetLine(y);
-		// `§â¿é¥X¦ì¸m²¾¦^¿Ã¹õ³Ì¥kÃä`
+		// `æŠŠè¼¸å‡ºä½ç½®ç§»å›è¢å¹•æœ€å³é‚Š`
 		fX = 0;
 		for ( int x=0; x<m_iNumColumns; x++ )
 		{
 			WCHAR c = line[x];
 			if ( c==0 )
 				continue;
-			// `§ä¥X¤å¦r¦b¶K¹Ï¸Ìªº¦ì¸m`
+			// `æ‰¾å‡ºæ–‡å­—åœ¨è²¼åœ–è£¡çš„ä½ç½®`
 			AccessTexture(c, column, row);
-			// `«Ø¥ß³o­Ó¤å¦rªº¯x§Î¼Ò«¬`
+			// `å»ºç«‹é€™å€‹æ–‡å­—çš„çŸ©å½¢æ¨¡å‹`
 			v[0].m_Position.Set(fX, fY, fZ);
 			v[1].m_Position.Set(fX, fY-m_fFontHeight, fZ);
 			v[2].m_Position.Set(fX+m_fFontWidth, fY-m_fFontHeight, fZ);
 			v[3].m_Position.Set(fX+m_fFontWidth, fY, fZ);
-			// `®Ú¾Ú¤å¦r¦b¶K¹Ï¸Ìªº¦ì¸m¨Ó³]©w¶K¹Ï®y¼Ğ`
+			// `æ ¹æ“šæ–‡å­—åœ¨è²¼åœ–è£¡çš„ä½ç½®ä¾†è¨­å®šè²¼åœ–åº§æ¨™`
 			float rX = (float)column/(float)m_iLayoutW;
 			float rY = (float)row/(float)m_iLayoutH;
 			v[0].m_Texcoord.Set(rX, rY, 0.0f);
 			v[1].m_Texcoord.Set(rX, rY+fTexH, 0.0f);
 			v[2].m_Texcoord.Set(rX+fTexW, rY+fTexH, 0.0f);
 			v[3].m_Texcoord.Set(rX+fTexW, rY, 0.0f);
-			// `«ş¨ã¸ê®Æ, Vector4 ¤ñ¸û®ö¶OªÅ¶¡¡A§â¥¦«ş¨ã¨ì¥u¨Ï¥Î3ºû¦ì¸m¸ò2ºû¶K¹Ï®y¼Ğªº«¬ºA¤¤¡C`
+			// `æ‹·å…·è³‡æ–™, Vector4 æ¯”è¼ƒæµªè²»ç©ºé–“ï¼ŒæŠŠå®ƒæ‹·å…·åˆ°åªä½¿ç”¨3ç¶­ä½ç½®è·Ÿ2ç¶­è²¼åœ–åº§æ¨™çš„å‹æ…‹ä¸­ã€‚`
 			int base = m_iNumCharacters*4;
 			for ( int i=0; i<4; i++ )
 			{
 				v[i].m_Position.StoreXYZ(m_pVertexArray[base+i].m_Position);
-				v[i].m_Texcoord.StoreXY(m_pVertexArray[base+i].m_Texcoord);
+				v[i].m_Texcoord.StoreXYZ(m_pVertexArray[base+i].m_Texcoord);
 			}
 			//
 			m_iNumCharacters++;
-			// `§â¿é¥X¦ì¸m¦V¥k²¾°Ê¤@®æ`
+			// `æŠŠè¼¸å‡ºä½ç½®å‘å³ç§»å‹•ä¸€æ ¼`
 			fX += m_fAdvanceX;
 		}
-		// `§â¿é¥X¦ì¸m¦V¤U²¾°Ê¤@¦æ`
+		// `æŠŠè¼¸å‡ºä½ç½®å‘ä¸‹ç§»å‹•ä¸€è¡Œ`
 		fY -= m_fAdvanceY;
 	}
 }
@@ -177,7 +177,7 @@ void CGutFont::Puts(int row, const char *string, bool bBuildMesh)
 
 	int len = strlen(string);
 	WCHAR *temp = new WCHAR[len+1];
-	
+
 	for ( int i=0; i<len; i++ )
 	{
 		temp[i] = string[i];
@@ -193,7 +193,7 @@ void CGutFont::Puts(const char *string, bool bBuildMesh)
 {
 	int len = strlen(string);
 	WCHAR *temp = new WCHAR[len+1];
-	
+
 	for ( int i=0; i<len; i++ )
 	{
 		temp[i] = string[i];
@@ -209,7 +209,7 @@ void CGutFont::Puts(const WCHAR *string, bool bBuildMesh)
 {
 	if ( m_iNumLines >= m_iNumRows )
 	{
-		// ¾ã­Óµe­±³Q¶ñº¡¤F, §â¤å¦r¦V¤W±²°Ê
+		// æ•´å€‹ç•«é¢è¢«å¡«æ»¿äº†, æŠŠæ–‡å­—å‘ä¸Šæ²å‹•
 		for ( int i=0; i<m_iNumLines-1; i++ )
 		{
 			WCHAR *line = GetLine(i);
@@ -219,7 +219,7 @@ void CGutFont::Puts(const WCHAR *string, bool bBuildMesh)
 	}
 	else
 	{
-		// ·s¼W¤@¦æ
+		// æ–°å¢ä¸€è¡Œ
 		m_iNumLines++;
 	}
 
@@ -228,7 +228,7 @@ void CGutFont::Puts(const WCHAR *string, bool bBuildMesh)
 
 	if ( bBuildMesh )
 	{
-		// «Ø¦ì¼Ò«¬	
+		// å»ºä½æ¨¡å‹
 		BuildMesh();
 	}
 }
@@ -243,7 +243,7 @@ void CGutFont::Puts(int row, const WCHAR *string, bool bBuildMesh)
 
 	if ( bBuildMesh )
 	{
-		// «Ø¦ì¼Ò«¬	
+		// å»ºä½æ¨¡å‹
 		BuildMesh();
 	}
 }

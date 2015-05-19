@@ -109,7 +109,7 @@ void sModelMaterial_OpenGL::Submit(sModelVertexChunk_OpenGL *pVChunk, UINT mask)
 	{
 		if ( !(glBindBuffer && pVChunk->m_VertexBufferID) )
 		{
-			// ¨S¦³¤ä´© Vertex/Index buffer object, ¸ê®Æ¦b¥D°OÅé¤¤.
+			// æ²’æœ‰æ”¯æ´ Vertex/Index buffer object, è³‡æ–™åœ¨ä¸»è¨˜é«”ä¸­.
 			vmem = (unsigned int) pVChunk->m_pVertexBuffer;
 		}
 	}
@@ -189,7 +189,7 @@ void sModelMaterial_OpenGL::Submit(sModelVertexChunk_OpenGL *pVChunk, UINT mask)
 				glEnable(GL_TEXTURE_GEN_T);
 				glDisable(GL_TEXTURE_GEN_R);
 				glDisable(GL_TEXTURE_GEN_Q);
-				// ¦Û°Ê²£¥Íspheremap¶K¹Ï®y¼Ð
+				// è‡ªå‹•ç”¢ç”Ÿspheremapè²¼åœ–åº§æ¨™
 				glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
 				glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_SPHERE_MAP);
 			}
@@ -203,12 +203,12 @@ void sModelMaterial_OpenGL::Submit(sModelVertexChunk_OpenGL *pVChunk, UINT mask)
 
 				glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, texblend[t]);
 
-				// S/T/R¤À§O¥Nªí¶K¹Ï®y¼ÐªºX/Y/Z¶b
+				// S/T/Råˆ†åˆ¥ä»£è¡¨è²¼åœ–åº§æ¨™çš„X/Y/Zè»¸
 				glEnable(GL_TEXTURE_GEN_S);
 				glEnable(GL_TEXTURE_GEN_T);
 				glEnable(GL_TEXTURE_GEN_R);
 				glDisable(GL_TEXTURE_GEN_Q);
-				// ¥H¥ú½uªº¤Ï®g¦V¶q¨Ó°µ¬°¶K¹Ï®y¼Ð
+				// ä»¥å…‰ç·šçš„åå°„å‘é‡ä¾†åšç‚ºè²¼åœ–åº§æ¨™
 				glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
 				glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
 				glTexGeni(GL_R, GL_TEXTURE_GEN_MODE, GL_REFLECTION_MAP);
@@ -221,7 +221,7 @@ void sModelMaterial_OpenGL::Submit(sModelVertexChunk_OpenGL *pVChunk, UINT mask)
 
 	if ( pVChunk && pVChunk->m_VertexDecl.m_iTangentOffset>=0 )
 	{
-		// ¬°¤FÂ²¤Æ, tangent space ¦V¶q©T©w©ñ¦b texcoord1 & texcoord2
+		// ç‚ºäº†ç°¡åŒ–, tangent space å‘é‡å›ºå®šæ”¾åœ¨ texcoord1 & texcoord2
 
 		sVertexDecl *pVertexDecl = &pVChunk->m_VertexDecl;
 
@@ -473,13 +473,13 @@ void CGutModel_OpenGL::Render(UINT mask)
 
 			if ( glBindBuffer && pVertexChunk->m_VertexBufferID && pVertexChunk->m_IndexBufferID )
 			{
-				// ¦³¤ä´© Vertex/Index buffer object
+				// æœ‰æ”¯æ´ Vertex/Index buffer object
 				glBindBuffer(GL_ARRAY_BUFFER, pVertexChunk->m_VertexBufferID);
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, pVertexChunk->m_IndexBufferID);
 			}
 			else
 			{
-				// ¨S¦³¤ä´© Vertex/Index buffer object, ¸ê®Æ¦b¥D°OÅé¤¤.
+				// æ²’æœ‰æ”¯æ´ Vertex/Index buffer object, è³‡æ–™åœ¨ä¸»è¨˜é«”ä¸­.
 				vmem = (unsigned int) pVertexChunk->m_pVertexBuffer;
 				imem = (unsigned int) pVertexChunk->m_pIndexBuffer;
 			}

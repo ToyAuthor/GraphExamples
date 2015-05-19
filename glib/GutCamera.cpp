@@ -1,24 +1,28 @@
+// é€™å€‹æª”æ¡ˆä¼¼ä¹æ²’å¯«å®Œï¼Œæ¨™é ­æª”æ˜¯ç©ºçš„
 
-void GutUserControl_RotateObject(Matrix4x4 &object_matrix, float time_advance)
+#include "Matrix4x4.h"
+#include "GutInput.h"
+
+void GutUserControl_RotateObject(Matrix4x4 object_matrix, float time_advance)
 {
-	// Åª¨ú·Æ¹«
+	// è®€å–æ»‘é¼ 
 	GutMouseInfo mouse;
 	if ( GutReadMouse(&mouse) )
 	{
 		float rotation_speed = 1.0 * time_advance;
 
-		// ¦pªG«ö¤U·Æ¹«¥ªÁä¡A´N±ÛÂàÃèÀY
-		if ( mouse.button[0] ) 
+		// å¦‚æœæŒ‰ä¸‹æ»‘é¼ å·¦éµï¼Œå°±æ—‹è½‰é¡é ­
+		if ( mouse.button[0] )
 		{
 			Matrix4x4 rotate_matrix;
-			
+
 			rotate_matrix.RotateY_Replace(mouse.x * rotation_speed);
 			rotate_matrix.RotateX(mouse.y * rotation_speed);
 
 			object_matrix = object_matrix * rotate_matrix;
 		}
 
-		// ¥Îºu½ü¨ÓÁY©ñª«¥ó
+		// ç”¨æ»¾è¼ªä¾†ç¸®æ”¾ç‰©ä»¶
 		if ( mouse.z )
 		{
 			float scale = 1.0f + mouse.z / 1000.0f;
@@ -29,22 +33,22 @@ void GutUserControl_RotateObject(Matrix4x4 &object_matrix, float time_advance)
 
 void GetUserControl_FPSCamera(Vector4 &vEye, Vector4 &vUp, Vector4 &vLookAt, float time_advance)
 {
-	// Åª¨ú·Æ¹«
+	// è®€å–æ»‘é¼ 
 	GutMouseInfo mouse;
 	GutReadMouse(&mouse);
-	// Åª¨úÁä½L
+	// è®€å–éµç›¤
 	char keyboard_state[256];
 	GutReadKeyboard(keyboard_state);
 
 	float moving_speed = 2.0f * time_advance;
 	float rotation_speed = 1.0f * time_advance;
 
-	// ·¥®y¼Ğ¨t²Î
+	// æ¥µåº§æ¨™ç³»çµ±
 	static float theta = -MATH_PI * 0.5f;
 	static float phi = 0.0f;
 
-	// ¦pªG«ö¤U·Æ¹«¥ªÁä¡A´N±ÛÂàÃèÀY
-	if ( mouse.button[0] ) 
+	// å¦‚æœæŒ‰ä¸‹æ»‘é¼ å·¦éµï¼Œå°±æ—‹è½‰é¡é ­
+	if ( mouse.button[0] )
 	{
 		theta += mouse.x * rotation_speed;
 		phi -= mouse.y * rotation_speed;
@@ -52,18 +56,18 @@ void GetUserControl_FPSCamera(Vector4 &vEye, Vector4 &vUp, Vector4 &vLookAt, flo
 
 	float sin_phi, cos_phi;
 	float sin_theta, cos_theta;
-	
+
 	FastMath::SinCos(phi, sin_phi, cos_phi);
 	FastMath::SinCos(theta, sin_theta, cos_theta);
 
-	// ­pºâÃèÀYªº­±¦V
+	// è¨ˆç®—é¡é ­çš„é¢å‘
 	Vector4 camera_facing;
 
 	camera_facing[0] = cos_phi * cos_theta;
 	camera_facing[1] = sin_phi;
 	camera_facing[2] = cos_phi * sin_theta;
 
-	// ­pºâÃèÀY¥¿¤W¤èªº¶b¦V
+	// è¨ˆç®—é¡é ­æ­£ä¸Šæ–¹çš„è»¸å‘
 	Vector4 camera_up;
 	FastMath::SinCos(phi + MATH_PI*0.5f, sin_phi, cos_phi);
 
@@ -71,33 +75,33 @@ void GetUserControl_FPSCamera(Vector4 &vEye, Vector4 &vUp, Vector4 &vLookAt, flo
 	camera_up[1] = sin_phi;
 	camera_up[2] = cos_phi * sin_theta;
 
-	// ¨ú±oÃè­±¥k¤èªº¤è¦V
+	// å–å¾—é¡é¢å³æ–¹çš„æ–¹å‘
 	Vector4 camera_right = Vector3CrossProduct(camera_up, camera_facing);
 
-	// «ö¤UW©Î¤è¦VÁä¦V¤W
+	// æŒ‰ä¸‹Wæˆ–æ–¹å‘éµå‘ä¸Š
 	if ( keyboard_state[GUTKEY_W] || keyboard_state[GUTKEY_UP] )
 	{
 		vEye += camera_facing * moving_speed;
 	}
-	// «ö¤US©Î¤è¦VÁä¦V¤U
+	// æŒ‰ä¸‹Sæˆ–æ–¹å‘éµå‘ä¸‹
 	if ( keyboard_state[GUTKEY_S] || keyboard_state[GUTKEY_DOWN] )
 	{
 		vEye -= camera_facing * moving_speed;
 	}
-	// «ö¤UA©Î¤è¦VÁä¦V¥ª
+	// æŒ‰ä¸‹Aæˆ–æ–¹å‘éµå‘å·¦
 	if ( keyboard_state[GUTKEY_A] || keyboard_state[GUTKEY_LEFT] )
 	{
 		vEye += camera_right * moving_speed;
 	}
-	// «ö¤UD©Î¤è¦VÁä¦V¥k
+	// æŒ‰ä¸‹Dæˆ–æ–¹å‘éµå‘å³
 	if ( keyboard_state[GUTKEY_D] || keyboard_state[GUTKEY_RIGHT] )
 	{
 		vEye -= camera_right * moving_speed;
 	}
 
-	// ­pºâ¥XÃèÀY¹ï·ÇªºÂI, ²£¥ÍÃèÀYÂà´«¯x°}®É·|¥Î¨ì.
-	vLookat = vEye + camera_facing;
-	// ¦]¬°¬O¹ï2­Ó¶bÂà°Ê, »İ­n§ó·sÃèÀY´Â¤Wªº¶b
+	// è¨ˆç®—å‡ºé¡é ­å°æº–çš„é», ç”¢ç”Ÿé¡é ­è½‰æ›çŸ©é™£æ™‚æœƒç”¨åˆ°.
+	vLookAt = vEye + camera_facing;
+	// å› ç‚ºæ˜¯å°2å€‹è»¸è½‰å‹•, éœ€è¦æ›´æ–°é¡é ­æœä¸Šçš„è»¸
 	vUp = camera_up;
 
 	vEye[3] = vUp[3] = vLookAt[3] = 1.0f;

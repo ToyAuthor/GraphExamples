@@ -1,15 +1,21 @@
 #ifndef _GUTIL_
 #define _GUTIL_
 
+
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
 #include <windows.h>
+#include "glew.h"
+#include "wglew.h"
 #include <GL/gl.h>
-#include <d3d9.h>
+//#include <d3d9.h>
 #include <string>
 
 #include "GutDefs.h"
 #include "GutMem.h"
-#include "GutDX9.h"
-#include "GutDX10.h"
+//#include "GutDX9.h"
+//#include "GutDX10.h"
 #include "GutOpenGL.h"
 
 #include "Vector4.h"
@@ -60,8 +66,8 @@ Matrix4x4 GutMatrixPerspectiveRH_OpenGL(float fovy, float aspect, float z_near, 
 Matrix4x4 GutMatrixPerspectiveLH_OpenGL(float fovy, float aspect, float z_near, float z_far);
 
 // 產生格子的函式
-bool GutCreateGrids(int x_grids, int y_grids, 
-				   Vertex_V3N3 **ppVertices, int &num_vertices, 
+bool GutCreateGrids(int x_grids, int y_grids,
+				   Vertex_V3N3 **ppVertices, int &num_vertices,
 				   unsigned short **ppIndices, int &num_indices,
 				   int &num_triangles);
 

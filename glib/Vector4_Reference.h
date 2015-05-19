@@ -3,7 +3,7 @@
 
 #if !defined(_ENABLE_GENERALCPU_)
 	#define _ENABLE_GENERALCPU_
-#endif 
+#endif
 
 // Vector library
 // Peter Pon Aug 30 2006
@@ -22,7 +22,7 @@ class Vector4CPU
 {
 public:
 	union{
-		struct 
+		struct
 		{
 			float x,y,z,w;
 		};
@@ -31,9 +31,19 @@ public:
 	};
 
 public:
-	inline Vector4CPU(void)
+	Vector4CPU()
 	{
-		// do nothing
+	}
+//	inline Vector4CPU():x(0.0f),y(0.0f),z(0.0f),w(0.0f)
+//	{
+//	}
+
+	inline Vector4CPU(const Vector4CPU &bro)
+	{
+		x = bro.x;
+		y = bro.y;
+		z = bro.z;
+		w = bro.w;
 	}
 
 	inline Vector4CPU(float x, float y, float z, float w=1.0f)
@@ -209,7 +219,7 @@ public:
 	inline float Length(void)
 	{
 		float vectorlength;
-		
+
 		float sum = x*x + y*y + z*z;
 		vectorlength = FastMath::Sqrt(sum);
 
@@ -243,7 +253,7 @@ public:
 		return *this;
 	}
 
-	inline Vector4CPU &InvertSign(void)
+	inline Vector4CPU InvertSign(void)
 	{
 		x = -x;
 		y = -y;
@@ -264,7 +274,7 @@ public:
 		if ( y < 0.0f ) y = 0.0f;
 		if ( z < 0.0f ) z = 0.0f;
 		if ( w < 0.0f ) w = 0.0f;
-	
+
 		return *this;
 	}
 
@@ -274,7 +284,7 @@ public:
 		if ( y < 0.0f ) y = 0.0f;
 		if ( z < 0.0f ) z = 0.0f;
 		if ( w < 0.0f ) w = 0.0f;
-	
+
 		return *this;
 	}
 
@@ -308,7 +318,7 @@ public:
 	}
 
 	// operators
-	inline Vector4CPU &operator=(Vector4CPU &rhs)
+	inline Vector4CPU operator=(Vector4CPU rhs)
 	{
 		x = rhs.x;
 		y = rhs.y;
@@ -317,13 +327,13 @@ public:
 		return *this;
 	}
 
-	inline Vector4CPU &operator=(float value)
+	inline Vector4CPU operator=(float value)
 	{
 		Set(value);
 		return *this;
 	}
 
-	inline Vector4CPU &operator+=(Vector4CPU &rhs)
+	inline Vector4CPU operator+=(Vector4CPU rhs)
 	{
 		x += rhs.x;
 		y += rhs.y;
@@ -332,7 +342,7 @@ public:
 		return *this;
 	}
 
-	inline Vector4CPU &operator+=(float value)
+	inline Vector4CPU operator+=(float value)
 	{
 		x += value;
 		y += value;
@@ -341,7 +351,7 @@ public:
 		return *this;
 	}
 
-	inline Vector4CPU &operator-=(Vector4CPU &rhs)
+	inline Vector4CPU operator-=(Vector4CPU rhs)
 	{
 		x -= rhs.x;
 		y -= rhs.y;
@@ -350,7 +360,7 @@ public:
 		return *this;
 	}
 
-	inline Vector4CPU &operator-=(float value)
+	inline Vector4CPU operator-=(float value)
 	{
 		x -= value;
 		y -= value;
@@ -359,7 +369,7 @@ public:
 		return *this;
 	}
 
-	inline Vector4CPU &operator*=(Vector4CPU &rhs)
+	inline Vector4CPU operator*=(Vector4CPU rhs)
 	{
 		x *= rhs.x;
 		y *= rhs.y;
@@ -368,7 +378,7 @@ public:
 		return *this;
 	}
 
-	inline Vector4CPU &operator*=(float value)
+	inline Vector4CPU operator*=(float value)
 	{
 		x *= value;
 		y *= value;
@@ -377,7 +387,7 @@ public:
 		return *this;
 	}
 
-	inline Vector4CPU &operator/=(Vector4CPU &rhs)
+	inline Vector4CPU operator/=(Vector4CPU rhs)
 	{
 		x /= rhs.x;
 		y /= rhs.y;
@@ -386,13 +396,18 @@ public:
 		return *this;
 	}
 
-	inline Vector4CPU &operator/=(float value)
+	inline Vector4CPU operator/=(float value)
 	{
 		x /= value;
 		y /= value;
 		z /= value;
 		w /= value;
 		return *this;
+	}
+
+	inline Vector4CPU operator-()
+	{
+		return this->InvertSign();
 	}
 
 	inline float &operator[](int index)
@@ -419,7 +434,7 @@ inline bool operator!=(Vector4CPU &a, Vector4CPU &b)
 	return !result;
 }
 
-inline Vector4CPU operator+(Vector4CPU &a, Vector4CPU &b)
+inline Vector4CPU operator+(Vector4CPU a, Vector4CPU b)
 {
 	Vector4CPU c;
 
@@ -431,7 +446,7 @@ inline Vector4CPU operator+(Vector4CPU &a, Vector4CPU &b)
 	return c;
 }
 
-inline Vector4CPU operator-(Vector4CPU &a, Vector4CPU &b)
+inline Vector4CPU operator-(Vector4CPU a, Vector4CPU b)
 {
 	Vector4CPU c;
 
@@ -443,7 +458,7 @@ inline Vector4CPU operator-(Vector4CPU &a, Vector4CPU &b)
 	return c;
 }
 
-inline Vector4CPU operator*(Vector4CPU &a, Vector4CPU &b)
+inline Vector4CPU operator*(Vector4CPU a, Vector4CPU b)
 {
 	Vector4CPU c;
 
@@ -455,7 +470,7 @@ inline Vector4CPU operator*(Vector4CPU &a, Vector4CPU &b)
 	return c;
 }
 
-inline Vector4CPU operator*(float f, Vector4CPU &v)
+inline Vector4CPU operator*(float f, Vector4CPU v)
 {
 	Vector4CPU result;
 
@@ -467,7 +482,7 @@ inline Vector4CPU operator*(float f, Vector4CPU &v)
 	return result;
 }
 
-inline Vector4CPU operator*(Vector4CPU &v, float f)
+inline Vector4CPU operator*(Vector4CPU v, float f)
 {
 	Vector4CPU result;
 
@@ -479,7 +494,7 @@ inline Vector4CPU operator*(Vector4CPU &v, float f)
 	return result;
 }
 
-inline Vector4CPU operator/(Vector4CPU &a, Vector4CPU &b)
+inline Vector4CPU operator/(Vector4CPU a, Vector4CPU b)
 {
 	Vector4CPU c;
 
@@ -491,7 +506,7 @@ inline Vector4CPU operator/(Vector4CPU &a, Vector4CPU &b)
 	return c;
 }
 
-inline Vector4CPU operator/(Vector4CPU &a, float f)
+inline Vector4CPU operator/(Vector4CPU a, float f)
 {
 	Vector4CPU c;
 
@@ -503,7 +518,7 @@ inline Vector4CPU operator/(Vector4CPU &a, float f)
 	return c;
 }
 
-inline Vector4CPU operator/(float f, Vector4CPU &a)
+inline Vector4CPU operator/(float f, Vector4CPU a)
 {
 	Vector4CPU c;
 
@@ -550,7 +565,28 @@ inline Vector4CPU Vector3CrossProduct(Vector4CPU &a, Vector4CPU &b)
 
 	return c;
 }
+inline Vector4CPU VectorMin(Vector4CPU a, Vector4CPU b)
+{
+	Vector4CPU c;
 
+	if(a.Length()<b.Length())
+		c=a;
+	else
+		c=b;
+
+	return c;
+}
+inline Vector4CPU VectorMax(Vector4CPU a, Vector4CPU b)
+{
+	Vector4CPU c;
+
+	if(a.Length()>b.Length())
+		c=a;
+	else
+		c=b;
+
+	return c;
+}
 inline Vector4CPU VectorLerp(Vector4CPU &a, Vector4CPU &b, float t)
 {
 	Vector4CPU c = a + (b - a) * t;
@@ -682,7 +718,7 @@ inline Vector4CPU PointToPlaneDistance(Vector4CPU &point, Vector4CPU &plane)
 inline Vector4CPU MirrorPoint(Vector4CPU &point, Vector4CPU &plane)
 {
 	Vector4CPU mirrored_point;
-	
+
 	float d = PointToPlaneDistance(point, plane)[0];
 	mirrored_point = point - (2.0f * d ) * plane;
 
@@ -700,7 +736,7 @@ inline Vector4CPU MirrorVector(Vector4CPU &vector, Vector4CPU &plane)
 
 	d = plane[3];
 	mirrored_b = vZero - (2.0f * d ) * plane;
-	
+
 	mirrored_vector = mirrored_a - mirrored_b;
 	mirrored_vector[3] = 1.0f;
 

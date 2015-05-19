@@ -17,7 +17,7 @@ GLuint GutLoadDDSTexture_OpenGL(const char *filename, sImageInfo *pInfo)
 		return 0;
 
 	GLuint TextureID = 0;
-	
+
 	int nHeight     = pDDSImageData->height;
 	int nWidth      = pDDSImageData->width;
 	int nNumMipMaps = pDDSImageData->numMipMaps;
@@ -101,14 +101,14 @@ GLuint GutLoadDDSTexture_OpenGL(const char *filename, sImageInfo *pInfo)
 		{
 			nSize = ((nWidth+3)/4) * ((nHeight+3)/4) * nBlockSize;
 
-			glCompressedTexImage2DARB( GL_TEXTURE_2D, i, format, 
+			glCompressedTexImage2DARB( GL_TEXTURE_2D, i, format,
 				nWidth, nHeight, 0, nSize, pDDSImageData->pixels + nOffset );
 		}
 		else
 		{
 			nSize = nWidth * nHeight * pDDSImageData->PixelSize;
 
-			glTexImage2D( GL_TEXTURE_2D, i, format, 
+			glTexImage2D( GL_TEXTURE_2D, i, format,
 				nWidth, nHeight, 0,
 				data_fmt, data_type, pDDSImageData->pixels + nOffset );
 		}
@@ -130,13 +130,13 @@ GLuint GutLoadDDSTexture_OpenGL(const char *filename, sImageInfo *pInfo)
 
 GLuint GutLoadCompressedCubemapTexture_OpenGL(const char **filename_array)
 {
-    // NOTE: Unlike "lena.bmp", "lena.dds" actually contains its own mip-map 
+    // NOTE: Unlike "lena.bmp", "lena.dds" actually contains its own mip-map
     // levels, which are also compressed.
 	GLuint TextureID = 0;
 
-	// ²£¥Í¤@­Ó¶K¹Ïª«¥ó
+	// ç”¢ç”Ÿä¸€å€‹è²¼åœ–ç‰©ä»¶
 	glGenTextures( 1, &TextureID );
-	// ¨Ï¥Îg_TextureID¶K¹Ïª«¥ó
+	// ä½¿ç”¨g_TextureIDè²¼åœ–ç‰©ä»¶
 	glBindTexture(GL_TEXTURE_CUBE_MAP, TextureID );
 
 	GLuint table[] = {
@@ -152,7 +152,7 @@ GLuint GutLoadCompressedCubemapTexture_OpenGL(const char **filename_array)
 	{
 		const char *filename = filename_array[f];
 		DDS_IMAGE_DATA *pDDSImageData = loadDDSTextureFile(filename);
-		
+
 		if ( pDDSImageData==NULL )
 		{
 			glDeleteTextures(1, &TextureID);
@@ -223,9 +223,9 @@ GLuint GutLoadCompressedCubemapTexture_OpenGL(const char **filename_array)
 GLuint GutLoadNoCompressedTexture_OpenGL(const char *filename, sImageInfo *pInfo, bool mipmap_enabled)
 {
 	GLuint textureID;
-	// ²£¥Í¤@­Ó¶K¹Ïª«¥ó
+	// ç”¢ç”Ÿä¸€å€‹è²¼åœ–ç‰©ä»¶
 	glGenTextures( 1, &textureID );
-	// ¨Ï¥Îg_TextureID¶K¹Ïª«¥ó
+	// ä½¿ç”¨g_TextureIDè²¼åœ–ç‰©ä»¶
 	glBindTexture( GL_TEXTURE_2D, textureID );
 
 	char file_ext[16];
@@ -310,7 +310,7 @@ GLuint GutLoadNoCompressedTexture_OpenGL(const char *filename, sImageInfo *pInfo
 
 	for ( int i=0; i<mipmap_levels; i++)
 	{
-		glTexImage2D( GL_TEXTURE_2D, i, elements, 
+		glTexImage2D( GL_TEXTURE_2D, i, elements,
 			pLoader->GetWidth(), pLoader->GetHeight(), 0,
 			image_format, GL_UNSIGNED_BYTE, pLoader->GetImg() );
 		if ( !pLoader->DownSampling() )
@@ -326,9 +326,9 @@ GLuint GutLoadNoCompressedCubemapTexture_OpenGL(const char **filename_array, boo
 {
 	GLuint textureID;
 
-	// `²£¥Í¤@­Ó¶K¹Ïª«¥ó`
+	// `ç”¢ç”Ÿä¸€å€‹è²¼åœ–ç‰©ä»¶`
 	glGenTextures( 1, &textureID );
-	// `¨Ï¥Îg_TextureID¶K¹Ïª«¥ó`
+	// `ä½¿ç”¨g_TextureIDè²¼åœ–ç‰©ä»¶`
 	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID );
 
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -443,12 +443,12 @@ GLuint GutLoadCubemapTexture_OpenGL(const char *filename)
 	}
 
     DDS_IMAGE_DATA *pDDSImageData = loadDDSTextureFile(filename);
-	
+
 	if ( pDDSImageData==NULL )
 		return 0;
 
 	GLuint TextureID = 0;
-	
+
     int nHeight     = pDDSImageData->height;
     int nWidth      = pDDSImageData->width;
     int nNumMipMaps = pDDSImageData->numMipMaps;
@@ -541,14 +541,14 @@ GLuint GutLoadCubemapTexture_OpenGL(const char *filename)
 			{
 				nSize = ((nWidth+3)/4) * ((nHeight+3)/4) * nBlockSize;
 
-				glCompressedTexImage2DARB( table[f], i, format, 
+				glCompressedTexImage2DARB( table[f], i, format,
 					nWidth, nHeight, 0, nSize, pBuffer);
 			}
 			else
 			{
 				nSize = nWidth * nHeight * pDDSImageData->PixelSize;
 
-				glTexImage2D( table[f], i, format, 
+				glTexImage2D( table[f], i, format,
 					nWidth, nHeight, 0,
 					data_fmt, data_type, pBuffer);
 			}
@@ -597,15 +597,15 @@ GLuint GutLoadCubemapTexture_OpenGL(const char **filename_array, bool mipmap_ena
 GLuint GutLoadVolumeTexture_OpenGL(const char *filename)
 {
     DDS_IMAGE_DATA *pDDSImageData = loadDDSTextureFile(filename);
-	
+
 	if ( pDDSImageData==NULL )
-		return NULL;
+		return (GLuint)NULL;
 
 	GLuint textureID;
 
-	// ²£¥Í¤@­Ó¶K¹Ïª«¥ó
+	// ç”¢ç”Ÿä¸€å€‹è²¼åœ–ç‰©ä»¶
 	glGenTextures( 1, &textureID );
-	// ¨Ï¥Îg_TextureID¶K¹Ïª«¥ó
+	// ä½¿ç”¨g_TextureIDè²¼åœ–ç‰©ä»¶
 	glBindTexture(GL_TEXTURE_3D, textureID );
 
 	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -615,8 +615,8 @@ GLuint GutLoadVolumeTexture_OpenGL(const char *filename)
     int nWidth      = pDDSImageData->width;
 	int nDepth		= pDDSImageData->depth;
 
-	// «þ³Æ¶K¹Ï
-	glTexImage3D(GL_TEXTURE_3D, 0, 1, 
+	// æ‹·å‚™è²¼åœ–
+	glTexImage3D(GL_TEXTURE_3D, 0, 1,
 		nWidth, nHeight, nDepth, 0,
 		GL_LUMINANCE, GL_UNSIGNED_BYTE, pDDSImageData->pixels );
 

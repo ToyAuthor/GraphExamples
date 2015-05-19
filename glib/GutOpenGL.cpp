@@ -61,8 +61,8 @@ static void FixupGLExt(void)
 		//glGetHandleARB
 		glGetShaderInfoLog = glGetInfoLogARB;
 		//glGetObjectParameterfvARB
-		//glGetObjectParameterivARB 
-		
+		//glGetObjectParameterivARB
+
 		glGetShaderSource = (PFNGLGETSHADERSOURCEPROC) glGetShaderSourceARB;
 		glGetUniformLocation = (PFNGLGETUNIFORMLOCATIONPROC) glGetUniformLocation;
 		glGetUniformfv = glGetUniformfvARB;
@@ -86,10 +86,10 @@ static void FixupGLExt(void)
 		glUniform4i = glUniform4iARB;
 		glUniform4iv = glUniform4ivARB;
 		glUniformMatrix2fv = glUniformMatrix2fvARB;
-		glUniformMatrix3fv=  glUniformMatrix3fvARB; 
+		glUniformMatrix3fv=  glUniformMatrix3fvARB;
 		glUniformMatrix4fv = glUniformMatrix4fvARB;
 		glUseProgram = glUseProgramObjectARB;
-		glValidateProgram = glValidateProgramARB; 
+		glValidateProgram = glValidateProgramARB;
 	}
 	*/
 }
@@ -112,31 +112,31 @@ static bool SetPixelformat(void)
 
 	int pixelformat = ChoosePixelFormat(g_hDC, &pfd);
 
-    if ( pixelformat == 0 ) 
-    { 
-        return false; 
-    } 
+    if ( pixelformat == 0 )
+    {
+        return false;
+    }
 
-    if ( SetPixelFormat(g_hDC, pixelformat, &pfd) == FALSE) 
-    { 
+    if ( SetPixelFormat(g_hDC, pixelformat, &pfd) == FALSE)
+    {
 		ReleaseDC(hWnd, g_hDC);
-        return false; 
+        return false;
     }
 
 	g_hGLRC = wglCreateContext(g_hDC);
 	wglMakeCurrent(g_hDC, g_hGLRC);
 
-    return true; 
+    return true;
 }
 
-void ErrorMessage(LPTSTR lpszFunction) 
-{ 
-    TCHAR szBuf[80]; 
+void ErrorMessage(LPTSTR lpszFunction)
+{
+    TCHAR szBuf[80];
     LPVOID lpMsgBuf;
-    DWORD dw = GetLastError(); 
+    DWORD dw = GetLastError();
 
     FormatMessage(
-        FORMAT_MESSAGE_ALLOCATE_BUFFER | 
+        FORMAT_MESSAGE_ALLOCATE_BUFFER |
         FORMAT_MESSAGE_FROM_SYSTEM,
         NULL,
         dw,
@@ -144,14 +144,14 @@ void ErrorMessage(LPTSTR lpszFunction)
         (LPTSTR) &lpMsgBuf,
         0, NULL );
 
-    printf("%s failed with error %d: %s", 
-        lpszFunction, dw, lpMsgBuf); 
- 
+    printf("%s failed with error %d: %s",
+        lpszFunction, dw, lpMsgBuf);
+
     LocalFree(lpMsgBuf);
 }
 
-// ±Ò°Ê OpenGL «á, ¤~¯à©I¥s¥¦ªºÂX¥R¨ç¦¡¨Ó³]©w multi-sampling ¥\¯à.
-// ÁÙ»İ­n­«·s¶}±Ò·sªºµøµ¡¨Ó®M¥Î multi-sampling ¼Ò¦¡, ¤£¯à¨Ï¥Î­ì¥»ªºµøµ¡.
+// å•Ÿå‹• OpenGL å¾Œ, æ‰èƒ½å‘¼å«å®ƒçš„æ“´å……å‡½å¼ä¾†è¨­å®š multi-sampling åŠŸèƒ½.
+// é‚„éœ€è¦é‡æ–°é–‹å•Ÿæ–°çš„è¦–çª—ä¾†å¥—ç”¨ multi-sampling æ¨¡å¼, ä¸èƒ½ä½¿ç”¨åŸæœ¬çš„è¦–çª—.
 static bool SetPixelformatEX(GutDeviceSpec *pSpec)
 {
 	HWND hWnd = GutGetWindowHandleWin32();
@@ -170,15 +170,15 @@ static bool SetPixelformatEX(GutDeviceSpec *pSpec)
 
 	int pixelformat = ChoosePixelFormat(g_hDC, &pfd);
 
-    if ( pixelformat == 0 ) 
-    { 
-        return false; 
-    } 
+    if ( pixelformat == 0 )
+    {
+        return false;
+    }
 
-    if ( SetPixelFormat(g_hDC, pixelformat, &pfd) == FALSE) 
-    { 
+    if ( SetPixelFormat(g_hDC, pixelformat, &pfd) == FALSE)
+    {
 		ReleaseDC(hWnd, g_hDC);
-        return false; 
+        return false;
     }
 
 	g_hGLRC = wglCreateContext(g_hDC);
@@ -196,7 +196,7 @@ static bool SetPixelformatEX(GutDeviceSpec *pSpec)
 		return false;
 	}
 
-	int iAttributes[] = { 
+	int iAttributes[] = {
 		WGL_DRAW_TO_WINDOW_ARB,GL_TRUE,
 		WGL_SUPPORT_OPENGL_ARB,GL_TRUE,
 		WGL_ACCELERATION_ARB, WGL_FULL_ACCELERATION_ARB,
@@ -206,14 +206,14 @@ static bool SetPixelformatEX(GutDeviceSpec *pSpec)
 		WGL_STENCIL_BITS_ARB,8,
 		WGL_DOUBLE_BUFFER_ARB,GL_TRUE,
 		WGL_SAMPLE_BUFFERS_ARB,GL_TRUE,
-		WGL_SAMPLES_ARB, pSpec->m_iMultiSamples, // Multi-Samplingªº´ú¸Õ¼Æ¶q
+		WGL_SAMPLES_ARB, pSpec->m_iMultiSamples, // Multi-Samplingçš„æ¸¬è©¦æ•¸é‡
 		0,0};
 
 	float fAttributes[] = {0,0};
 
 	UINT numFormats = 0;
 
-	// `ÀË¬d¬O§_¤ä´©©Ò­n¨Dªºµe­±¼Ò¦¡, ¥D­n¬O¦b¬İ¦³¨S¦³¤ä´© multisampling.`
+	// `æª¢æŸ¥æ˜¯å¦æ”¯æ´æ‰€è¦æ±‚çš„ç•«é¢æ¨¡å¼, ä¸»è¦æ˜¯åœ¨çœ‹æœ‰æ²’æœ‰æ”¯æ´ multisampling.`
 	BOOL valid = wglChoosePixelFormatARB(g_hDC, iAttributes, fAttributes,1, &pixelformat, &numFormats);
 
 	if (!valid && numFormats==0)
@@ -221,7 +221,7 @@ static bool SetPixelformatEX(GutDeviceSpec *pSpec)
 		return false;
 	}
 
-	DescribePixelFormat(g_hDC, pixelformat, sizeof(pfd), &pfd); 
+	DescribePixelFormat(g_hDC, pixelformat, sizeof(pfd), &pfd);
 
 	if ( g_hGLRC && g_hDC )
 	{
@@ -232,22 +232,22 @@ static bool SetPixelformatEX(GutDeviceSpec *pSpec)
 		ReleaseDC(hWnd, g_hDC);
 		g_hDC = NULL;
 
-		// Ãö³¬­ì©lªºµøµ¡
+		// é—œé–‰åŸå§‹çš„è¦–çª—
 		DestroyWindow(hWnd);
-		// ¸É®» WM_QUIT °T®§
+		// è£œæ‰ WM_QUIT è¨Šæ¯
 		MSG msg;
-		while(GetMessage(&msg, NULL, 0, 0)!=0) {} 
+		while(GetMessage(&msg, NULL, 0, 0)!=0) {}
 	}
 
-	// ¦P¤@­Óµøµ¡¥u¯à©I¥s SetPixelFormat ¤@¦¸, ©Ò¥H­n­«·s¶}±Ò·sªºµøµ¡.
+	// åŒä¸€å€‹è¦–çª—åªèƒ½å‘¼å« SetPixelFormat ä¸€æ¬¡, æ‰€ä»¥è¦é‡æ–°é–‹å•Ÿæ–°çš„è¦–çª—.
 	GutCreateWindow(-1, -1, -1, -1, "OpenGL");
 
 	hWnd = GutGetWindowHandleWin32();
 	g_hDC = GetDC(hWnd);
 
-	if ( SetPixelFormat(g_hDC, pixelformat, &pfd)==FALSE) 
-	{ 
-		ErrorMessage("SetPixelFormatEX");
+	if ( SetPixelFormat(g_hDC, pixelformat, &pfd)==FALSE)
+	{
+		ErrorMessage(__TEXT("SetPixelFormatEX"));
 		ReleaseDC(hWnd, g_hDC);
 		return false;
 	}
@@ -265,7 +265,7 @@ bool GutInitGraphicsDeviceOpenGL(GutDeviceSpec *pSpec)
 	if ( pSpec )
 		multisamples = pSpec->m_iMultiSamples;
 
-	// `¶}±Òµøµ¡®É´N¤w¨ú±o³o­Ó¥Î¨Ó¥Nªíµøµ¡ªº«ü¼Ğ, ª½±µ®³¨Ó¨Ï¥Î.`
+	// `é–‹å•Ÿè¦–çª—æ™‚å°±å·²å–å¾—é€™å€‹ç”¨ä¾†ä»£è¡¨è¦–çª—çš„æŒ‡æ¨™, ç›´æ¥æ‹¿ä¾†ä½¿ç”¨.`
 	HWND hWnd = GutGetWindowHandleWin32();
 	if ( hWnd==NULL )
 		return false;
@@ -307,18 +307,18 @@ bool GutReleaseGraphicsDeviceOpenGL(void)
 
 void GutSwapBuffersOpenGL(void)
 {
-	// `§e²{¥X­I´º`
+	// `å‘ˆç¾å‡ºèƒŒæ™¯`
 	SwapBuffers(g_hDC);
 }
 
-// ¸ü¤JOpenGL ARB Vertex Program³W®æªº²Õ¦X»y¨¥
+// è¼‰å…¥OpenGL ARB Vertex Programè¦æ ¼çš„çµ„åˆèªè¨€
 GLuint GutLoadVertexProgramOpenGL_ASM(const char *filename)
 {
 	char filename_fullpath[256];
 	sprintf(filename_fullpath, "%s%s", GutGetShaderPath(), filename);
 
 	unsigned int size = 0;
-	// Åª¤JÀÉ®×
+	// è®€å…¥æª”æ¡ˆ
 	unsigned char *buffer = (unsigned char *) GutLoadBinaryStream(filename_fullpath, &size);
 	if ( buffer==NULL )
 	{
@@ -326,13 +326,13 @@ GLuint GutLoadVertexProgramOpenGL_ASM(const char *filename)
 	}
 
 	GLuint shader_id = 0;
-	// ²£¥Í¤@­Óshaderª«¥ó
+	// ç”¢ç”Ÿä¸€å€‹shaderç‰©ä»¶
 	glGenProgramsARB(1, &shader_id);
-	// ¨Ï¥Î·sªºshaderª«¥ó, ¨Ã§â¥¦³]©w¦¨vertex programª«¥ó
+	// ä½¿ç”¨æ–°çš„shaderç‰©ä»¶, ä¸¦æŠŠå®ƒè¨­å®šæˆvertex programç‰©ä»¶
 	glBindProgramARB(GL_VERTEX_PROGRAM_ARB, shader_id);
-  	// §â²Õ¦X»y¨¥«ü¥O¸ü¤Jshaderª«¥ó¤¤
+  	// æŠŠçµ„åˆèªè¨€æŒ‡ä»¤è¼‰å…¥shaderç‰©ä»¶ä¸­
 	glProgramStringARB(GL_VERTEX_PROGRAM_ARB, GL_PROGRAM_FORMAT_ASCII_ARB, size, buffer);
-	// ¦pªGShader¤¤¥X²{¤F¥ô¦ó¿ù»~
+	// å¦‚æœShaderä¸­å‡ºç¾äº†ä»»ä½•éŒ¯èª¤
 	if ( GL_INVALID_OPERATION == glGetError() )
 	{
 		// Find the error position
@@ -341,13 +341,13 @@ GLuint GutLoadVertexProgramOpenGL_ASM(const char *filename)
 		// errors and warnings string.
 		GLubyte *errString = (GLubyte *) glGetString(GL_PROGRAM_ERROR_STRING_ARB);
 		fprintf( stderr, "error at position: %d\n%s\n", errPos, errString );
-		// Åª¨ú¥¢±Ñ, ÄÀ©ñshaderª«¥ó
+		// è®€å–å¤±æ•—, é‡‹æ”¾shaderç‰©ä»¶
 		glDeleteProgramsARB(1, &shader_id);
 		shader_id = 0;
 	}
-	// §â¸ü¤JÀÉ®×ªº°O¾ĞÅéÄÀ©ñ
+	// æŠŠè¼‰å…¥æª”æ¡ˆçš„è¨˜æ†¶é«”é‡‹æ”¾
 	GutReleaseBinaryStream(buffer);
-	// shader_id¥Nªí·sªºshaderª«¥ó
+	// shader_idä»£è¡¨æ–°çš„shaderç‰©ä»¶
 	return shader_id;
 }
 
@@ -356,14 +356,14 @@ void GutReleaseVertexProgramOpenGL(GLuint shader_id)
 	glDeleteProgramsARB( 1, &shader_id );
 }
 
-// ¸ü¤JOpenGL ARB Fragment Program³W®æªº²Õ¦X»y¨¥
+// è¼‰å…¥OpenGL ARB Fragment Programè¦æ ¼çš„çµ„åˆèªè¨€
 GLuint GutLoadFragmentProgramOpenGL_ASM(const char *filename)
 {
 	char filename_fullpath[256];
 	sprintf(filename_fullpath, "%s%s", GutGetShaderPath(), filename);
 
 	unsigned int size = 0;
-	// Åª¤JÀÉ®×
+	// è®€å…¥æª”æ¡ˆ
 	unsigned char *buffer = (unsigned char *) GutLoadBinaryStream(filename_fullpath, &size);
 	if ( buffer==NULL )
 	{
@@ -371,13 +371,13 @@ GLuint GutLoadFragmentProgramOpenGL_ASM(const char *filename)
 	}
 
 	GLuint shader_id = 0;
-	// ²£¥Í¤@­Óshaderª«¥ó
+	// ç”¢ç”Ÿä¸€å€‹shaderç‰©ä»¶
 	glGenProgramsARB(1, &shader_id);
-	// ¨Ï¥Î·sªºshaderª«¥ó, ¨Ã§â¥¦³]©w¦¨fragment programª«¥ó
+	// ä½¿ç”¨æ–°çš„shaderç‰©ä»¶, ä¸¦æŠŠå®ƒè¨­å®šæˆfragment programç‰©ä»¶
     glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, shader_id );
-	// §â²Õ¦X»y¨¥«ü¥O¸ü¤Jshaderª«¥ó¤¤
+	// æŠŠçµ„åˆèªè¨€æŒ‡ä»¤è¼‰å…¥shaderç‰©ä»¶ä¸­
 	glProgramStringARB(GL_FRAGMENT_PROGRAM_ARB, GL_PROGRAM_FORMAT_ASCII_ARB, size, buffer);
-	// ¦pªGShader¤¤¥X²{¤F¥ô¦ó¿ù»~
+	// å¦‚æœShaderä¸­å‡ºç¾äº†ä»»ä½•éŒ¯èª¤
 	if ( GL_INVALID_OPERATION == glGetError() )
 	{
 		// Find the error position
@@ -386,13 +386,13 @@ GLuint GutLoadFragmentProgramOpenGL_ASM(const char *filename)
 		// errors and warnings string.
 		GLubyte *errString = (GLubyte *) glGetString(GL_PROGRAM_ERROR_STRING_ARB);
 		fprintf( stderr, "error at position: %d\n%s\n", errPos, errString );
-		// Åª¨ú¥¢±Ñ, ÄÀ©ñshaderª«¥ó
+		// è®€å–å¤±æ•—, é‡‹æ”¾shaderç‰©ä»¶
 		glDeleteProgramsARB(1, &shader_id);
 		shader_id = 0;
 	}
-	// §â¸ü¤JÀÉ®×ªº°O¾ĞÅéÄÀ©ñ
+	// æŠŠè¼‰å…¥æª”æ¡ˆçš„è¨˜æ†¶é«”é‡‹æ”¾
 	GutReleaseBinaryStream(buffer);
-	// shader_id¥Nªí·sªºshaderª«¥ó
+	// shader_idä»£è¡¨æ–°çš„shaderç‰©ä»¶
 	return shader_id;
 }
 
@@ -449,7 +449,7 @@ GLuint GutLoadFragmentShaderOpenGL_GLSL(const char *filename)
 GLuint GutCreateProgram(GLuint vs, GLuint fs)
 {
 	GLuint p = glCreateProgram();
-	
+
 	glAttachShader(p, vs);
 	glAttachShader(p, fs);
 	glLinkProgram(p);
@@ -460,17 +460,17 @@ GLuint GutCreateProgram(GLuint vs, GLuint fs)
 bool GutCreateRenderTargetOpenGL(int w, int h, GLuint color_fmt, GLuint *pFramebuffer, GLuint *pTexture)
 {
 	GLuint framebuffer, texture;
-	
+
 	*pFramebuffer = 0;
 	*pTexture = 0;
 
 	glGenFramebuffersEXT(1, &framebuffer);
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebuffer);
 
-	// °tÓ_¤@¶ô¶K¹ÏªÅ¶¡µ¹framebuffer objectÃ¸¹Ï¨Ï¥Î 
+	// é…ç½ä¸€å¡Šè²¼åœ–ç©ºé–“çµ¦framebuffer objectç¹ªåœ–ä½¿ç”¨
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
-	// ³]©wfilter
+	// è¨­å®šfilter
 	if ( color_fmt==GL_RGBA32F_ARB || color_fmt==GL_RGBA16F_ARB )
 	{
 		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -484,12 +484,12 @@ bool GutCreateRenderTargetOpenGL(int w, int h, GLuint color_fmt, GLuint *pFrameb
 
 	glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	// «Å§i¶K¹Ï¤j¤p¤Î®æ¦¡
+	// å®£å‘Šè²¼åœ–å¤§å°åŠæ ¼å¼
 	glTexImage2D(GL_TEXTURE_2D, 0, color_fmt,  w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-	// framebufferªºRGBAÃ¸¹Ï
+	// framebufferçš„RGBAç¹ªåœ–
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, texture, 0);
 
-	// ÀË¬dframebuffer object¦³¨S¦³°t¸m¦¨?
+	// æª¢æŸ¥framebuffer objectæœ‰æ²’æœ‰é…ç½®æˆåŠŸ
 	GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
 	if ( status!=GL_FRAMEBUFFER_COMPLETE_EXT )
 	{
@@ -517,16 +517,16 @@ bool GutCreateRenderTargetOpenGL(int w, int h, GLuint *pFrameBuffer,
 	{
 		for ( int i=0; i<num_mrts; i++ )
 		{
-			// °tÓ_¶K¹ÏªÅ¶¡ 
+			// é…ç½è²¼åœ–ç©ºé–“
 			glGenTextures(1, &frametexture);
 			glBindTexture(GL_TEXTURE_2D, frametexture);
-			// ®M¥Î¤@­Ó¹w³]ªºfilter
+			// å¥—ç”¨ä¸€å€‹é è¨­çš„filter
 			//glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			//glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 			glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-			// ³]©wfilter
+			// è¨­å®šfilter
 			if ( color_fmt==GL_RGBA32F_ARB || color_fmt==GL_RGBA16F_ARB )
 			{
 				glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -538,11 +538,11 @@ bool GutCreateRenderTargetOpenGL(int w, int h, GLuint *pFrameBuffer,
 				glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			}
 
-			// «Å§i¶K¹Ï¤j¤p¤Î®æ¦¡
+			// å®£å‘Šè²¼åœ–å¤§å°åŠæ ¼å¼
 			glTexImage2D(GL_TEXTURE_2D, 0, color_fmt,  w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-			// framebufferªºRGBA¶K¹Ï
+			// framebufferçš„RGBAè²¼åœ–
 			glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT+i, GL_TEXTURE_2D, frametexture, 0);
-			
+
 			pFrameTexture[i] = frametexture;
 		}
 	}
@@ -554,24 +554,24 @@ bool GutCreateRenderTargetOpenGL(int w, int h, GLuint *pFrameBuffer,
 
 	if ( pDepthTexture )
 	{
-		// °tÓ_¶K¹ÏªÅ¶¡ 
+		// é…ç½è²¼åœ–ç©ºé–“
 		glGenTextures(1, &depthtexture);
 		glBindTexture(GL_TEXTURE_2D, depthtexture);
-		// ®M¥Î¤@­Ó¹w³]ªºfilter
+		// å¥—ç”¨ä¸€å€‹é è¨­çš„filter
 		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		// «Å§i¶K¹Ï¤j¤p¤Î®æ¦¡
+		// å®£å‘Šè²¼åœ–å¤§å°åŠæ ¼å¼
 		glTexImage2D(GL_TEXTURE_2D, 0, depth_fmt,  w, h, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, NULL);
-		// framebufferªºZBuffer³¡¥÷
+		// framebufferçš„ZBufferéƒ¨ä»½
 		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, depthtexture, 0);
 
 		*pDepthTexture = depthtexture;
 	}
 
 	/*
-	 ÀË¬dframebuffer object¦³¨S¦³°t¸m¦¨¥\
+	 æª¢æŸ¥framebuffer objectæœ‰æ²’æœ‰é…ç½®æˆåŠŸ
 	*/
 
 	GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
@@ -585,7 +585,7 @@ bool GutCreateRenderTargetOpenGL(int w, int h, GLuint *pFrameBuffer,
 	return true;
 }
 
-bool GutCreateRenderTargetOpenGL(int w, int h, GLuint *pFrameBuffer, 
+bool GutCreateRenderTargetOpenGL(int w, int h, GLuint *pFrameBuffer,
 								 GLuint color_fmt, GLuint *pFrameTexture,
 								 GLuint depth_fmt, GLuint *pDepthTexture)
 {
@@ -593,7 +593,7 @@ bool GutCreateRenderTargetOpenGL(int w, int h, GLuint *pFrameBuffer,
 }
 
 /*
-bool GutCreateRenderTargetOpenGL(int w, int h, GLuint *pFrameBuffer, 
+bool GutCreateRenderTargetOpenGL(int w, int h, GLuint *pFrameBuffer,
 								 GLuint color_fmt, GLuint *pFrameTexture,
 								 GLuint depth_fmt, GLuint *pDepthTexture)
 {
@@ -606,19 +606,19 @@ bool GutCreateRenderTargetOpenGL(int w, int h, GLuint *pFrameBuffer,
 
 	if ( pFrameTexture )
 	{
-		// °tÓ_¶K¹ÏªÅ¶¡ 
+		// é…ç½è²¼åœ–ç©ºé–“
 		glGenTextures(1, &frametexture);
 		glBindTexture(GL_TEXTURE_2D, frametexture);
-		// ®M¥Î¤@­Ó¹w³]ªºfilter
+		// å¥—ç”¨ä¸€å€‹é è¨­çš„filter
 		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		// «Å§i¶K¹Ï¤j¤p¤Î®æ¦¡
+		// å®£å‘Šè²¼åœ–å¤§å°åŠæ ¼å¼
 		glTexImage2D(GL_TEXTURE_2D, 0, color_fmt,  w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-		// framebufferªºRGBAÃ¸¹Ï
+		// framebufferçš„RGBAç¹ªåœ–
 		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, frametexture, 0);
-		
+
 		*pFrameTexture = frametexture;
 	}
 	else
@@ -629,23 +629,23 @@ bool GutCreateRenderTargetOpenGL(int w, int h, GLuint *pFrameBuffer,
 
 	if ( pDepthTexture )
 	{
-		// °tÓ_¶K¹ÏªÅ¶¡ 
+		// é…ç½è²¼åœ–ç©ºé–“
 		glGenTextures(1, &depthtexture);
 		glBindTexture(GL_TEXTURE_2D, depthtexture);
-		// ®M¥Î¤@­Ó¹w³]ªºfilter
+		// å¥—ç”¨ä¸€å€‹é è¨­çš„filter
 		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		// «Å§i¶K¹Ï¤j¤p¤Î®æ¦¡
+		// å®£å‘Šè²¼åœ–å¤§å°åŠæ ¼å¼
 		glTexImage2D(GL_TEXTURE_2D, 0, depth_fmt,  w, h, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, NULL);
-		// framebufferªºZBuffer³¡¥÷
+		// framebufferçš„ZBufferéƒ¨ä»½
 		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_TEXTURE_2D, depthtexture, 0);
 
 		*pDepthTexture = depthtexture;
 	}
 
-	// ÀË¬dframebuffer object¦³¨S¦³°t¸m¦¨?
+	// æª¢æŸ¥framebuffer objectæœ‰æ²’æœ‰é…ç½®æˆ?
 	GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
 	if ( status!=GL_FRAMEBUFFER_COMPLETE_EXT )
 	{
