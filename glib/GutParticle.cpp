@@ -3,6 +3,8 @@
 #include "Gut.h"
 #include "GutParticle.h"
 
+using namespace std;
+
 inline float rand(float min, float max)
 {
 	int rnd = rand()%1024;
@@ -43,7 +45,7 @@ void CGutParticle::SetEmitter(sParticleEmitter &emitter)
 {
 	m_Emitter = emitter;
 
-	float particlelife = std::max(m_Emitter.m_fParticleLife[0], m_Emitter.m_fParticleLife[1]);
+	float particlelife = max(m_Emitter.m_fParticleLife[0], m_Emitter.m_fParticleLife[1]);
 	float max_particles = ceil(particlelife * m_Emitter.m_fEmitRate);
 
 	m_iNumMaxParticles = (int) max_particles;
@@ -86,14 +88,14 @@ void CGutParticle::SetEmitter(sParticleEmitter &emitter)
 
 int CGutParticle::Simulate(float time_advance)
 {
-	// `µo®g·s²É¤l`
+	// `ç™¼å°„æ–°ç²’å­`
 	EmitParticles(time_advance);
-	// `²É¤l¹B°Ê¼ÒÀÀ`
+	// `ç²’å­é‹å‹•æ¨¡æ“¬`
 	AnimateParticles(time_advance);
 	return m_iNumParticles;
 }
 
-// `µo®g·s²É¤l`
+// `ç™¼å°„æ–°ç²’å­`
 int CGutParticle::EmitParticles(float time_advance)
 {
 	m_fTimeAccmulated += time_advance;
@@ -134,7 +136,7 @@ int CGutParticle::EmitParticles(float time_advance)
 	m_iNumParticles += num_particles;
 	return num_particles;
 }
-// `²É¤l¹B°Ê¼ÒÀÀ`
+// `ç²’å­é‹å‹•æ¨¡æ“¬`
 int CGutParticle::AnimateParticles(float time_advance)
 {
 	sParticle *particle = m_pParticleArray;
@@ -146,12 +148,12 @@ int CGutParticle::AnimateParticles(float time_advance)
 
 		if ( particle->m_fLife < 0 )
 		{
-			// `²¾°£³o­Ó²É¤l`
+			// `ç§»é™¤é€™å€‹ç²’å­`
 			*particle = m_pParticleArray[--m_iNumParticles];
 		}
 		else
 		{
-			// `²É¤l¹B°Ê`
+			// `ç²’å­é‹å‹•`
 			particle->m_vPosition += particle->m_vVelocity * time_advance;
 			particle->m_vVelocity += vForce;
 			particle++;
@@ -160,7 +162,7 @@ int CGutParticle::AnimateParticles(float time_advance)
 
 	return m_iNumParticles;
 }
-// `«Ø¥ß¼Ò«¬`
+// `å»ºç«‹æ¨¡åž‹`
 int CGutParticle::BuildMesh(Matrix4x4 &camera_matrix)
 {
 	Vector4 vHalf(0.5f);
@@ -206,14 +208,14 @@ int CGutParticle::BuildPointSprite(void)
 	{
 		sPointSpriteVertex *p = m_pPointSpriteArray + i;
 		sParticle *particle = m_pParticleArray + i;
-		// `²H¥X¹Ø©R§Öµ²§ôªºParticle`
+		// `æ·¡å‡ºå£½å‘½å¿«çµæŸçš„Particle`
 		float fFadeout = m_pParticleArray[i].m_fLife * 5;
 		if ( fFadeout > 1.0f ) fFadeout = 1.0f;
 
 		int intensity = fFadeout * 255;
 		unsigned int color = intensity<<24 | intensity<<16 | intensity<<8 | intensity;
 
-		// `³]©w¦ì¸m¸òÃC¦â`
+		// `è¨­å®šä½ç½®è·Ÿé¡è‰²`
 		particle->m_vPosition.StoreXYZ(p->m_fPosition);
 		p->m_fSize = particle->m_fSize;
 		p->m_Color = color;

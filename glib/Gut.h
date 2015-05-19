@@ -65,13 +65,13 @@ Matrix4x4 GutMatrixPerspectiveRH_OpenGL(float fovy, float aspect, float z_near, 
 Matrix4x4 GutMatrixPerspectiveRH_OpenGL(float fovy, float aspect, float z_near, float z_far);
 Matrix4x4 GutMatrixPerspectiveLH_OpenGL(float fovy, float aspect, float z_near, float z_far);
 
-// ²£¥Í®æ¤lªº¨ç¦¡
+// ç”¢ç”Ÿæ ¼å­çš„å‡½å¼
 bool GutCreateGrids(int x_grids, int y_grids,
 				   Vertex_V3N3 **ppVertices, int &num_vertices,
 				   unsigned short **ppIndices, int &num_indices,
 				   int &num_triangles);
 
-// ÄÀ©ñ®æ¤l¼Ò«¬¸ê·½
+// é‡‹æ”¾æ ¼å­æ¨¡å‹è³‡æº
 bool GutReleaseGrids(Vertex_V3N3 **ppVertices, unsigned short **ppIndices);
 
 void GutConvertColor(Vector4 &vColor, unsigned char rgba[4]);

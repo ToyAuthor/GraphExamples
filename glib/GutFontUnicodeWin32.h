@@ -2,7 +2,7 @@
 #define _GUT_FONTUNICODE_
 
 #include <windows.h>
-#include <gdiplus.h>
+//#include <gdiplus.h>   // 這個標頭檔會在VC2010遇上很多error
 #include <map>
 
 #include "GutFont.h"
