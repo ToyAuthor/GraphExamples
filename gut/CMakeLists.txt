@@ -7,8 +7,20 @@ glew
 
 set(SOURCE
 	Gut.cpp
+	GutWin32.cpp
+	Matrix4x4.cpp
+	GutUserControl.cpp
+	GutOpenGL.cpp
+	GutTexture_OpenGL.cpp
+	GutFileUtility.cpp
+	GutModel.cpp
+	Vector4.cpp
+	GutTGA.cpp
+	GutBMP.cpp
+	GutImage.cpp
 )
 
+add_definitions( -DWIN32_MEAN_AND_LEAN -DGLEW_STATIC -DVC_EXTRALEAN -DGLEW_BUILD -D_CRT_SECURE_NO_WARNINGS )
 
 
 if(UNIX)

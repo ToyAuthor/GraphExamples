@@ -1,10 +1,12 @@
 
-set(PROJECT_NAME "HelloWorld")
+set(PROJECT_NAME "Bloom")
 
 project(${PROJECT_NAME})
 
-include_directories(${ROOT_SOURCE_DIR}/glew)
+add_definitions( -DWIN32_MEAN_AND_LEAN -DGLEW_STATIC -DVC_EXTRALEAN -DGLEW_BUILD -D_CRT_SECURE_NO_WARNINGS )
+
 include_directories(${GUT_GLIB_INCLUDE_DIR})
+include_directories(${ROOT_SOURCE_DIR}/glew)
 link_directories(${ROOT_BINARY_DIR}/lib)
 
 
@@ -26,6 +28,8 @@ endif()
 
 set(SOURCE
 main.cpp
+render_data.cpp
+render_opengl.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE})
