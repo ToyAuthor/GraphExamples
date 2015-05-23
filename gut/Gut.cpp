@@ -1,3 +1,4 @@
+#include <string.h>
 #include "Gut.h"
 
 static char g_szShaderPath[128] = "";

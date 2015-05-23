@@ -35,6 +35,13 @@ struct HWND
 
 typedef Display* HINSTANCE;
 
+#ifndef TURE
+#define TURE 1
+#endif
+#ifndef FALSE
+#define FALSE 0
+#endif
+
 #endif//_WIN32
 
 

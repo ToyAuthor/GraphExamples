@@ -4,8 +4,11 @@
 #include "GutOpenGL.h"
 #include "GutFileUtility.h"
 
+#ifdef _WIN32
+
 static HDC g_hDC = NULL;
 static HGLRC g_hGLRC = NULL;
+
 
 // make my own glProgramLocalParameters4fvEXT
 void APIENTRY _my_glProgramLocalParameters4fvEXT(GLenum target, GLuint index, GLsizei count, const GLfloat* params)
@@ -251,8 +254,12 @@ static bool SetPixelformatEX(GutDeviceSpec *pSpec)
 	return true;
 }
 
+#else
+#endif
+
 bool GutInitGraphicsDeviceOpenGL(GutDeviceSpec *pSpec)
 {
+	#ifdef _WIN32
 	int multisamples = 0;
 
 	if ( pSpec )
@@ -277,15 +284,18 @@ bool GutInitGraphicsDeviceOpenGL(GutDeviceSpec *pSpec)
 			return false;
 		}
 	}
-
+	#endif
 	glewInit();
+	#ifdef _WIN32
 	FixupGLExt();
+	#endif
 
 	return true;
 }
 
 bool GutReleaseGraphicsDeviceOpenGL(void)
 {
+	#ifdef _WIN32
 	HWND hWnd = GutGetWindowHandleWin32();
 
 	wglMakeCurrent(g_hDC, NULL);
@@ -295,13 +305,19 @@ bool GutReleaseGraphicsDeviceOpenGL(void)
 	ReleaseDC(hWnd, g_hDC);
 	g_hDC = NULL;
 
+	#endif
+
 	return true;
 }
 
 void GutSwapBuffersOpenGL(void)
 {
 	// `呈現出背景`
+	#ifdef _WIN32
 	SwapBuffers(g_hDC);
+	#else
+	glXSwapBuffers(GutGetWindowInstanceWin32(),GutGetWindowHandleWin32().window);
+	#endif
 }
 
 // 載入OpenGL ARB Vertex Program規格的組合語言

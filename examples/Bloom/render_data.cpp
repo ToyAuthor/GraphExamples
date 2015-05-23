@@ -1,6 +1,6 @@
 #include "Vector4.h"
 #include "render_data.h"
-#include "gut.h"
+#include "Gut.h"
 
 // Position, Texcoord
 Vertex_VT g_FullScreenQuad[4] =

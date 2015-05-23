@@ -4,6 +4,72 @@
 #include "GutBMP.h"
 #include "GutTGA.h"
 
+#ifdef __linux__
+
+#include <string.h>
+
+static void _split_whole_name(const char *whole_name, char *fname, char *ext)
+{
+	char *p_ext;
+
+	p_ext = const_cast<char*>(rindex(whole_name, '.'));
+	if (NULL != p_ext)
+	{
+		strcpy(ext, p_ext);
+		snprintf(fname, p_ext - whole_name + 1, "%s", whole_name);
+	}
+	else
+	{
+		ext[0] = '\0';
+		strcpy(fname, whole_name);
+	}
+}
+void _splitpath(const char *path, char *drive, char *dir, char *fname, char *ext)
+{
+	char *p_whole_name;
+
+	drive[0] = '\0';
+	if (NULL == path)
+	{
+		dir[0] = '\0';
+		fname[0] = '\0';
+		ext[0] = '\0';
+		return;
+	}
+
+	if ('/' == path[strlen(path)])
+	{
+		strcpy(dir, path);
+		fname[0] = '\0';
+		ext[0] = '\0';
+		return;
+	}
+
+	p_whole_name = const_cast<char*>(rindex(path, '/'));
+	if (NULL != p_whole_name)
+	{
+		p_whole_name++;
+		_split_whole_name(p_whole_name, fname, ext);
+
+		snprintf(dir, p_whole_name - path, "%s", path);
+	}
+	else
+	{
+		_split_whole_name(path, fname, ext);
+		dir[0] = '\0';
+	}
+}
+
+inline char* strlwr( char* str )
+{
+	char* orig = str;
+	// process the string
+	for ( ; *str != '\0'; str++ )
+		*str = tolower(*str);
+	return orig;
+}
+
+#endif
 
 GLuint GutLoadNoCompressedTexture_OpenGL(const char *filename, sImageInfo *pInfo, bool mipmap_enabled)
 {
