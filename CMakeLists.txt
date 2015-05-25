@@ -1,6 +1,8 @@
 project(GraphExamples)
 cmake_minimum_required(VERSION 2.8)
 
+set(CMAKE_BUILD_TYPE Debug)
+
 set(ROOT_SOURCE_DIR ${PROJECT_SOURCE_DIR})
 set(ROOT_BINARY_DIR ${PROJECT_BINARY_DIR})
 

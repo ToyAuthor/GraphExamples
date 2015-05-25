@@ -254,7 +254,6 @@ static bool SetPixelformatEX(GutDeviceSpec *pSpec)
 	return true;
 }
 
-#else
 #endif
 
 bool GutInitGraphicsDeviceOpenGL(GutDeviceSpec *pSpec)
@@ -285,7 +284,29 @@ bool GutInitGraphicsDeviceOpenGL(GutDeviceSpec *pSpec)
 		}
 	}
 	#endif
-	glewInit();
+
+
+	GLenum	err = glewInit();
+
+	if( GLEW_OK != err )
+	{
+		printf("glewInit failed\n");
+	}
+	else
+	{
+	//	printf("glewInit OK\n");
+	}
+
+	if( GLEW_VERSION_2_0 )
+	{
+	//	printf("glew support 2.0\n");
+	}
+	else
+	{
+		printf("glew not support 2.0\n");
+	}
+
+
 	#ifdef _WIN32
 	FixupGLExt();
 	#endif
@@ -312,7 +333,6 @@ bool GutReleaseGraphicsDeviceOpenGL(void)
 
 void GutSwapBuffersOpenGL(void)
 {
-	// `呈現出背景`
 	#ifdef _WIN32
 	SwapBuffers(g_hDC);
 	#else
@@ -465,7 +485,7 @@ GLuint GutCreateProgram(GLuint vs, GLuint fs)
 
 	return p;
 }
-
+// 配置了一組FBO跟貼圖編號
 bool GutCreateRenderTargetOpenGL(int w, int h, GLuint color_fmt, GLuint *pFramebuffer, GLuint *pTexture)
 {
 	GLuint framebuffer, texture;
@@ -473,12 +493,14 @@ bool GutCreateRenderTargetOpenGL(int w, int h, GLuint color_fmt, GLuint *pFrameb
 	*pFramebuffer = 0;
 	*pTexture = 0;
 
+	//
 	glGenFramebuffersEXT(1, &framebuffer);
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, framebuffer);
 
 	// 配罝一塊貼圖空間給framebuffer object繪圖使用
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
+
 	// 設定filter
 	if ( color_fmt==GL_RGBA32F_ARB || color_fmt==GL_RGBA16F_ARB )
 	{
@@ -493,8 +515,10 @@ bool GutCreateRenderTargetOpenGL(int w, int h, GLuint color_fmt, GLuint *pFrameb
 
 	glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	// 宣告貼圖大小及格式
+
+	// 宣告貼圖大小及格式，最後一個參數不用給圖檔數據了
 	glTexImage2D(GL_TEXTURE_2D, 0, color_fmt,  w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+
 	// framebuffer的RGBA繪圖
 	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, texture, 0);
 

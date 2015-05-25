@@ -6,19 +6,25 @@
 
 #include "render_data.h"
 
-static GLuint g_texture = 0;
 
-static GLuint g_BlurVS = 0;
-static GLuint g_BlurPS = 0;
-static GLuint g_BlurProgram = 0;
+//-------圖片-------
+static GLuint g_texture = 0;                // 記錄本範例唯一一張圖片的材質貼圖編號
+static sImageInfo g_ImageInfo;              // 用來記錄圖片資訊
 
-static GLuint g_BrightnessPS = 0;
-static GLuint g_BrightnessProgram = 0;
+//-------shader-------
+static GLuint g_BlurVS = 0;                 // posteffect_blur.glvs
+static GLuint g_BlurPS = 0;                 // posteffect_blur.glfs
+static GLuint g_BlurProgram = 0;            // 上面兩個的結合
 
-static sImageInfo g_ImageInfo;
+//-------shader-------
+static GLuint g_BrightnessPS = 0;           // posteffect_brightness.glfs
+static GLuint g_BrightnessProgram = 0;      // posteffect_blur.glvs跟上面的結合
 
-static GLuint g_framebuffer[2] = {0, 0};
-static GLuint g_frametexture[2] = {0, 0};
+//-------FBO-------
+static GLuint g_framebuffer[2] = {0, 0};    // 記本範例唯二的FBO
+static GLuint g_frametexture[2] = {0, 0};   // FBO的材質貼圖編號
+
+
 
 // One time Init
 bool InitResourceOpenGL(void)
@@ -44,10 +50,13 @@ bool InitResourceOpenGL(void)
 	if ( g_texture==0 )
 		return false;
 
+
+	//--------------------建立g_BlurProgram跟g_BrightnessProgram--------------------start
+
 	// 載入Vertex Shader
-	g_BlurVS = GutLoadVertexShaderOpenGL_GLSL("../../shaders/posteffect_blur.glvs");
+	g_BlurVS = GutLoadVertexShaderOpenGL_GLSL("../../shaders/Posteffect_blur.glvs");
 	// 載入Pixel Shader
-	g_BlurPS = GutLoadFragmentShaderOpenGL_GLSL("../../shaders/posteffect_blur.glfs");
+	g_BlurPS = GutLoadFragmentShaderOpenGL_GLSL("../../shaders/Posteffect_blur.glfs");
 	if ( 0==g_BlurVS || 0==g_BlurPS )
 		return false;
 	// 建立Shader Program物件
@@ -61,7 +70,7 @@ bool InitResourceOpenGL(void)
 	// 把g_BlurProgram中的Vertex Shader跟Pixel Shader連結起來
 	glLinkProgram(g_BlurProgram);
 
-	g_BrightnessPS = GutLoadFragmentShaderOpenGL_GLSL("../../shaders/posteffect_brightness.glfs");
+	g_BrightnessPS = GutLoadFragmentShaderOpenGL_GLSL("../../shaders/Posteffect_brightness.glfs");
 	if ( 0==g_BrightnessPS )
 		return false;
 
@@ -69,15 +78,21 @@ bool InitResourceOpenGL(void)
 	if ( 0==g_BrightnessProgram )
 		return false;
 
+	//--------------------建立g_BlurProgram跟g_BrightnessProgram--------------------end
+
+
+	// 因為接下來要生的Frame buffer面積只有圖片的四分之一
 	int w = g_ImageInfo.m_iWidth/4;
 	int h = g_ImageInfo.m_iHeight/4;
 
+	// 算是在初始配置FBO
 	if ( !GutCreateRenderTargetOpenGL(w, h, GL_RGBA8, &g_framebuffer[0], &g_frametexture[0]) )
 		return false;
 
 	if ( !GutCreateRenderTargetOpenGL(w, h, GL_RGBA8, &g_framebuffer[1], &g_frametexture[1]) )
 		return false;
 
+	// 把緩衝區設定弄回到預設值
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
 
 	glMatrixMode(GL_PROJECTION);
@@ -87,7 +102,7 @@ bool InitResourceOpenGL(void)
 
 	return true;
 }
-
+// 釋放資源，沒什麼特別
 bool ReleaseResourceOpenGL(void)
 {
 	if ( g_texture )
@@ -123,27 +138,30 @@ static GLuint Brightness(GLuint texture, sImageInfo *pInfo)
 {
 	int w = pInfo->m_iWidth/4;
 	int h = pInfo->m_iHeight/4;
-	// `對動態貼圖來畫面`
+
+	// 對動態貼圖來畫面`
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, g_framebuffer[1]);
 	glViewport(0, 0, w, h);
-	// `使用對亮度做變化的Shader`
-	glUseProgram(g_BrightnessProgram);
-	// `套用貼圖`
-	glBindTexture(GL_TEXTURE_2D, texture);
-	// `設定亮度變化參數`
+
+	glUseProgram(g_BrightnessProgram);      // 使用對亮度做變化的Shader(會在外面呼叫glUseProgram(0)來統一關閉)
+	glBindTexture(GL_TEXTURE_2D, texture);  // 套用貼圖
+
+	//--------設定亮度變化參數--------
 	GLint reg_offset = glGetUniformLocation(g_BrightnessProgram, "IntensityOffset");
 	GLint reg_scale = glGetUniformLocation(g_BrightnessProgram, "IntensityScale");
 	glUniform4fv(reg_offset, 1, (float *)&g_vBrightnessOffset);
 	glUniform4fv(reg_scale, 1, (float *)&g_vBrightnessScale);
-	// `設定資料資料格式`
+
+
+	//--------設定資料資料格式--------
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	glVertexPointer(3, GL_FLOAT, sizeof(Vertex_VT), g_FullScreenQuad[0].m_Position);
 	glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex_VT), g_FullScreenQuadInv[0].m_Texcoord);
-	//
+
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
-	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);// 回到預設狀態
 
 	return g_frametexture[1];
 }
@@ -176,7 +194,7 @@ static GLuint BlurImage(GLuint texture, sImageInfo *pInfo)
 	glVertexPointer(3, GL_FLOAT, sizeof(Vertex_VT), g_FullScreenQuad[0].m_Position);
 	glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex_VT), g_FullScreenQuadInv[0].m_Texcoord);
 
-	// `水平方向模糊`
+	// 水平方向模糊
 	{
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, g_framebuffer[0]);
 		glViewport(0, 0, w, h);
@@ -185,7 +203,7 @@ static GLuint BlurImage(GLuint texture, sImageInfo *pInfo)
 			glUniform4fv(reg, num_samples, (float *)vTexOffsetX);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	}
-	// `垂直方向模糊`
+	// 垂直方向模糊
 	{
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, g_framebuffer[1]);
 		glBindTexture(GL_TEXTURE_2D, g_frametexture[0]);
@@ -197,54 +215,53 @@ static GLuint BlurImage(GLuint texture, sImageInfo *pInfo)
 	return g_frametexture[1];
 }
 
-// `使用OpenGL來繪圖`
+// 使用OpenGL來繪圖
 void RenderFrameOpenGL(void)
 {
 	int w, h;
 	GutGetWindowSize(w, h);
 	glViewport(0, 0, w, h);
-	// `清除畫面`
+
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// `不使用` Shader
-	glUseProgram(0);
-	// `設定材質, 套用貼圖.`
+
+	glUseProgram(0);// 先設為無Shader狀態
+
+
+
+	// 設定材質, 套用貼圖，先將原始圖片畫出來
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	glBindTexture(GL_TEXTURE_2D, g_texture);
-	// `設定頂點資料格式`
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	glVertexPointer(3, GL_FLOAT, sizeof(Vertex_VT), g_FullScreenQuad[0].m_Position);
 	glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex_VT), g_FullScreenQuad[0].m_Texcoord);
-
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
+
+	// 這裡則是畫出糊掉的改圖，跟上面那張疊合可產生光暈效果
 	if ( g_bPosteffect )
 	{
-		// `取出圖片中偏亮的部份`
-		GLuint texture = Brightness(g_texture, &g_ImageInfo);
-		// `對圖片做模糊化`
-		texture = BlurImage(texture, &g_ImageInfo);
-		// `使用主畫面`
-		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+		GLuint texture = Brightness(g_texture, &g_ImageInfo);      // 取出圖片中偏亮的部份
+		texture = BlurImage(texture, &g_ImageInfo);                // 對圖片做模糊化
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);               // 使用主畫面
 		glViewport(0, 0, w, h);
-		// `不使用` Shader
-		glUseProgram(0);
-		// `設定材質, 套用動態貼圖.`
+
+		glUseProgram(0);                                           // 不使用Shader
+
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-		glBindTexture(GL_TEXTURE_2D, texture);
-		// `啟動混色功能`
-		glEnable(GL_BLEND);
+		glBindTexture(GL_TEXTURE_2D, texture);                     // 設定材質, 套用動態貼圖
+		glEnable(GL_BLEND);                                        // 啟動混色功能
 		glBlendFunc(GL_ONE, GL_ONE);
-		// `設定頂點資料格式`
+
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		glVertexPointer(3, GL_FLOAT, sizeof(Vertex_VT), g_FullScreenQuad[0].m_Position);
 		glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex_VT), g_FullScreenQuad[0].m_Texcoord);
-		// `畫出看板`
+
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-		// `關閉混色`
+
 		glDisable(GL_BLEND);
 	}
 

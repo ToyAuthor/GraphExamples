@@ -6,7 +6,6 @@
 
 int main()
 {
-	glViewport(0, 0, 512, 512);
 	GutCreateWindow(100, 100, 512, 512, "HelloOpenGL");
 
 

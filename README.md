@@ -4,8 +4,8 @@
 
 ### 主要修改如下
 - 略過Direct3D相關部分，只編譯OpenGL
-- Build system改以CMake搭配MinGW or Visual Studio 2010
-- 增加一個新區塊，用來嘗試寫出跨平台的範例
+- Build system改以CMake搭配MinGW 或者 Visual Studio 2010
+- 增加一個新區塊，用來寫跨平台的範例
 
 ### 版權聲明
 內容僅授權合法持有本書之讀者學習所用，非經本書作者或碁峯資訊股份有限公司正式授權，不得以任何形式複製、抄襲、轉載或透過網路散佈其內容。後續增修內容版權仍屬原作者所有。

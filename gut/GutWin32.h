@@ -7,7 +7,7 @@ HWND GutGetWindowHandleWin32();
 void GutSetWindowHandleWin32(HWND hWnd);
 HINSTANCE GutGetWindowInstanceWin32();
 void GutGetWindowSize(int &w, int &h);
-void GutDestroyWindow();                      // 跟GutCreateWindow()是成對的
+void GutDestroyWindow();                      // 跟 GutCreateWindow()是成對的
 bool GutFullScreen(int width, int height);
 bool GutProcessMessage();                     // 查看事件信箱有沒有新訊息，做相對應的處理
 

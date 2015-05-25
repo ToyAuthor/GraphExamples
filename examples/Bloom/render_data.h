@@ -6,8 +6,8 @@
 
 struct Vertex_VT
 {
-	float m_Position[3]; // ³»ÂI¦ì¸m
-	float m_Texcoord[2]; // ¶K¹Ï®y¼Ğ
+	float m_Position[3]; // é ‚é»ä½ç½®
+	float m_Texcoord[2]; // è²¼åœ–åº§æ¨™
 };
 
 #define KERNELSIZE 9
@@ -20,6 +20,6 @@ extern Vector4 g_vBrightnessScale;
 
 //
 extern bool g_bPosteffect;
-// ¯x§Î
+// çŸ©å½¢
 extern Vertex_VT g_FullScreenQuad[4];
 extern Vertex_VT g_FullScreenQuadInv[4];

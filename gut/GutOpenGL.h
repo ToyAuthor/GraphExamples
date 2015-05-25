@@ -8,7 +8,7 @@
 
 bool GutInitGraphicsDeviceOpenGL(GutDeviceSpec *spec=NULL);
 bool GutReleaseGraphicsDeviceOpenGL(void);
-void GutSwapBuffersOpenGL(void);
+void GutSwapBuffersOpenGL(void);                                // 更新視窗畫面
 
 GLuint GutLoadVertexProgramOpenGL_ASM(const char *filename);
 GLuint GutLoadFragmentProgramOpenGL_ASM(const char *filename);
@@ -23,8 +23,9 @@ GLuint GutCreateProgram(GLuint vs, GLuint fs);
 void GutReleaseVertexShaderGLSL(GLuint shader_id);
 void GutReleaseFragmentShaderGLSL(GLuint shader_id);
 
+// 建立一組FBO跟貼圖編號
 bool GutCreateRenderTargetOpenGL(int w, int h, GLuint color_fmt, GLuint *framebuffer, GLuint *texture);
-bool GutCreateRenderTargetOpenGL(int w, int h, GLuint *framebuffer, 
+bool GutCreateRenderTargetOpenGL(int w, int h, GLuint *framebuffer,
 								 GLuint color_fmt, GLuint *frametexture,
 								 GLuint depth_fmt, GLuint *depthtexture);
 bool GutCreateRenderTargetOpenGL(int w, int h, GLuint *pFrameBuffer,

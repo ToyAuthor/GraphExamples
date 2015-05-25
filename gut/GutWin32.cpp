@@ -312,6 +312,8 @@ bool GutCreateWindow(int x, int y, int width, int height, std::string title)
 	mAtom.delete_window = XInternAtom(g_hInstance,"WM_DELETE_WINDOW",False);
 	XSetWMProtocols(g_hInstance,g_hWnd.window,&mAtom.delete_window,1);
 
+	GutInitGraphicsDeviceOpenGL();
+
 	XFree(graphInfo);
 
 	return (bool)1;

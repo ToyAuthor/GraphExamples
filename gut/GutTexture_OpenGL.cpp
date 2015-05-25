@@ -7,57 +7,93 @@
 #ifdef __linux__
 
 #include <string.h>
+#include <string>
 
-static void _split_whole_name(const char *whole_name, char *fname, char *ext)
+//static void _split_whole_name(const char *whole_name, char *fname, char *ext)
+//{
+//	char *p_ext;
+//
+//	p_ext = const_cast<char*>(rindex(whole_name, '.'));
+//	if (NULL != p_ext)
+//	{
+//		strcpy(ext, p_ext);
+//		snprintf(fname, p_ext - whole_name + 1, "%s", whole_name);
+//	}
+//	else
+//	{
+//		ext[0] = '\0';
+//		strcpy(fname, whole_name);
+//	}
+//}
+//// 這個有很大的問題，需要重寫
+//void _splitpath(const char *path, char *drive, char *dir, char *fname, char *ext)
+//{
+//	char *p_whole_name;
+//
+////	drive[0] = '\0';
+//	(char*)drive;
+//
+//	if (NULL == path)
+//	{
+//		dir[0] = '\0';
+//		fname[0] = '\0';
+//		ext[0] = '\0';
+//		return;
+//	}
+//
+//	if ('/' == path[strlen(path)])
+//	{
+//		strcpy(dir, path);
+//		fname[0] = '\0';
+//		ext[0] = '\0';
+//		return;
+//	}
+//
+//	p_whole_name = const_cast<char*>(rindex(path, '/'));
+//	if (NULL != p_whole_name)
+//	{
+//		p_whole_name++;
+//		_split_whole_name(p_whole_name, fname, ext);
+//
+//		snprintf(dir, p_whole_name - path, "%s", path);
+//	}
+//	else
+//	{
+//		_split_whole_name(path, fname, ext);
+//		dir[0] = '\0';
+//	}
+//}
+
+// 唯一的作用是將副檔名分析出來，暫時亂寫過關，必須好好處理重寫這個函式
+void _splitpath(std::string path, char *drive, char *dir, char *fname, char *ext)
 {
-	char *p_ext;
+	(char*)drive;
+	(char*)dir;
+	(char*)fname;
 
-	p_ext = const_cast<char*>(rindex(whole_name, '.'));
-	if (NULL != p_ext)
+	int i=0;
+	for(;;i++)
 	{
-		strcpy(ext, p_ext);
-		snprintf(fname, p_ext - whole_name + 1, "%s", whole_name);
-	}
-	else
-	{
-		ext[0] = '\0';
-		strcpy(fname, whole_name);
-	}
-}
-void _splitpath(const char *path, char *drive, char *dir, char *fname, char *ext)
-{
-	char *p_whole_name;
-
-	drive[0] = '\0';
-	if (NULL == path)
-	{
-		dir[0] = '\0';
-		fname[0] = '\0';
-		ext[0] = '\0';
-		return;
+		if(path[i]=='.')
+		{
+			if(path[i+1]=='.')
+			{
+				i++;
+			}
+			else
+			{
+				break;
+			}
+		}
 	}
 
-	if ('/' == path[strlen(path)])
+	int j=0;
+	for(;i<path.size();i++,j++)
 	{
-		strcpy(dir, path);
-		fname[0] = '\0';
-		ext[0] = '\0';
-		return;
+		ext[j]=path[i];
 	}
 
-	p_whole_name = const_cast<char*>(rindex(path, '/'));
-	if (NULL != p_whole_name)
-	{
-		p_whole_name++;
-		_split_whole_name(p_whole_name, fname, ext);
-
-		snprintf(dir, p_whole_name - path, "%s", path);
-	}
-	else
-	{
-		_split_whole_name(path, fname, ext);
-		dir[0] = '\0';
-	}
+	ext[j]='\0';
 }
 
 inline char* strlwr( char* str )
