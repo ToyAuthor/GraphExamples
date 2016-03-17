@@ -200,6 +200,9 @@ void GutDestroyWindow(void)
 	UnregisterClass( "SimpleWindow", g_hInstance );
 }
 #else
+
+#include <string.h>
+
 enum
 {
 	_NET_WM_STATE_REMOVE=0,
@@ -282,6 +285,15 @@ bool GutCreateWindow(int x, int y, int width, int height, std::string title)
 	Window                  root;
 	XVisualInfo*            graphInfo;
 	XSetWindowAttributes    attributes;
+
+	// 這段處理在 Ubuntu 12.04 LTS 32bit 這版可以省略
+	// 但是在 Ubuntu 14.04 LTS 64bit 上面就無法執行程式了，這 bug 找好久
+	memset(&attributes,0,sizeof(XSetWindowAttributes));
+	attributes.event_mask = ExposureMask    |
+	                        KeyPressMask    |
+	                        KeyReleaseMask  |
+	                        ButtonPressMask |
+	                        ButtonReleaseMask;
 
 	g_hInstance=XOpenDisplay(0);
 
