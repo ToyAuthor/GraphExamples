@@ -3,6 +3,20 @@
 //
 void main(void)
 {
+	// gl_MultiTexCoord0 跟 gl_Vertex 是唯讀的內建變數
+
+	/*
+	 * 等價寫法
+	 * gl_Position = gl_ProjectionMatrix * gl_ModelViewMatrix * gl_Vertex;
+	 * 負責算出頂點該有的位置
+	 */
 	gl_Position = ftransform();
+
+	/*
+	 * 這用法已經被建議棄用了，另外宣告一個全域變數來裝會比較好
+	 * gl_TexCoord只是用來傳遞資料給fragment shader的媒介
+	 * gl_MultiTexCoord0是C++使用glTexCoord2f,glTexCoordPointer之類的介面輸入的
+	 * gl_MultiTexCoord0代表此vertex的texCoord
+	 */
 	gl_TexCoord[0] = gl_MultiTexCoord0;
 }

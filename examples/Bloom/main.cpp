@@ -3,11 +3,29 @@
 #include "render_opengl.h"
 #include "render_data.h"
 
+/*
+ * g_weight_table 的資料還無法使用
+ * 必須經過下面這道計算才能用
+ */
+static void CountWeight()
+{
+	float       sum = 0.0f;
+	const int   num_samples = KERNELSIZE;
+
+	for(int i=0; i<num_samples; i++ )
+	{
+		sum += g_weight_table[i];
+	}
+
+	for(int i=0; i<num_samples; i++ )
+	{
+		g_weight_table[i] /= sum;
+	}
+}
 
 int main()
 {
 	GutCreateWindow(100, 100, 512, 512, "HelloOpenGL");
-
 
 	if ( !InitResourceOpenGL() )
 	{
@@ -16,19 +34,7 @@ int main()
 		exit(0);
 	}
 
-	int i;
-	const int num_samples = KERNELSIZE;
-
-	float sum = 0.0f;
-	for ( i=0; i<num_samples; i++ )
-	{
-		sum += g_weight_table[i];
-	}
-
-	for ( i=0; i<num_samples; i++ )
-	{
-		g_weight_table[i] /= sum;
-	}
+	CountWeight();
 
 	while( GutProcessMessage() )
 	{

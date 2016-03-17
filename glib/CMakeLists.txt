@@ -64,8 +64,8 @@ if(WIN32)
 endif()
 
 if(WIN32)
-	include_directories("D:/DirectXSDK/Include")
-	link_directories("D:/DirectXSDK/Lib/x86")
+	include_directories("D:/sdk/DirectXSDK/Include")
+	link_directories("D:/sdk/DirectXSDK/Lib/x86")
 endif()
 
 include_directories( ${ROOT_SOURCE_DIR}/glew/GL )

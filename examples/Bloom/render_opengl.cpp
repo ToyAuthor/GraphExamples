@@ -102,7 +102,7 @@ bool InitResourceOpenGL(void)
 
 	return true;
 }
-// 釋放資源，沒什麼特別
+// 釋放資源，沒什麼特別需要解釋的
 bool ReleaseResourceOpenGL(void)
 {
 	if ( g_texture )
@@ -126,20 +126,21 @@ bool ReleaseResourceOpenGL(void)
 
 	return true;
 }
-
+/*
 // callback function. 視窗大小改變時會被呼叫, 並傳入新的視窗大小.
 void ResizeWindowOpenGL(int width, int height)
 {
 	// 使用新的視窗大小做為新的繪圖解析度
 	glViewport(0, 0, width, height);
 }
-
+*/
+// 畫一張光圖，尚未進行模糊化
 static GLuint Brightness(GLuint texture, sImageInfo *pInfo)
 {
 	int w = pInfo->m_iWidth/4;
 	int h = pInfo->m_iHeight/4;
 
-	// 對動態貼圖來畫面`
+	// 對動態貼圖來繪製畫面
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, g_framebuffer[1]);
 	glViewport(0, 0, w, h);
 
@@ -153,7 +154,7 @@ static GLuint Brightness(GLuint texture, sImageInfo *pInfo)
 	glUniform4fv(reg_scale, 1, (float *)&g_vBrightnessScale);
 
 
-	//--------設定資料資料格式--------
+	//--------設定資料格式--------
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	glVertexPointer(3, GL_FLOAT, sizeof(Vertex_VT), g_FullScreenQuad[0].m_Position);
@@ -165,7 +166,7 @@ static GLuint Brightness(GLuint texture, sImageInfo *pInfo)
 
 	return g_frametexture[1];
 }
-
+// 在FBO上畫出模糊的圖
 static GLuint BlurImage(GLuint texture, sImageInfo *pInfo)
 {
 	int w = pInfo->m_iWidth/4;
@@ -179,6 +180,7 @@ static GLuint BlurImage(GLuint texture, sImageInfo *pInfo)
 	Vector4 vTexOffsetX[num_samples];
 	Vector4 vTexOffsetY[num_samples];
 
+	// 填寫畫素位置的偏移植，會傳給shaders使用，藉此製造模糊效果
 	for ( int i=0; i<num_samples; i++ )
 	{
 		vTexOffsetX[i].Set(g_uv_offset_table[i] * fTexelW, 0.0f, 0.0f, g_weight_table[i]);
@@ -194,7 +196,7 @@ static GLuint BlurImage(GLuint texture, sImageInfo *pInfo)
 	glVertexPointer(3, GL_FLOAT, sizeof(Vertex_VT), g_FullScreenQuad[0].m_Position);
 	glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex_VT), g_FullScreenQuadInv[0].m_Texcoord);
 
-	// 水平方向模糊
+	// 水平方向模糊的畫
 	{
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, g_framebuffer[0]);
 		glViewport(0, 0, w, h);
@@ -203,7 +205,7 @@ static GLuint BlurImage(GLuint texture, sImageInfo *pInfo)
 			glUniform4fv(reg, num_samples, (float *)vTexOffsetX);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	}
-	// 垂直方向模糊
+	// 垂直方向模糊的畫
 	{
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, g_framebuffer[1]);
 		glBindTexture(GL_TEXTURE_2D, g_frametexture[0]);
@@ -244,22 +246,23 @@ void RenderFrameOpenGL(void)
 	if ( g_bPosteffect )
 	{
 		GLuint texture = Brightness(g_texture, &g_ImageInfo);      // 取出圖片中偏亮的部份
-		texture = BlurImage(texture, &g_ImageInfo);                // 對圖片做模糊化
-		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);               // 使用主畫面
+		texture = BlurImage(texture, &g_ImageInfo);                // 對圖片做模糊化，回傳的是模糊光暈了
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);               // 切回主畫面
 		glViewport(0, 0, w, h);
 
 		glUseProgram(0);                                           // 不使用Shader
 
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-		glBindTexture(GL_TEXTURE_2D, texture);                     // 設定材質, 套用動態貼圖
+		glBindTexture(GL_TEXTURE_2D, texture);                     // 使用前面做出來的光暈圖
 		glEnable(GL_BLEND);                                        // 啟動混色功能
 		glBlendFunc(GL_ONE, GL_ONE);
 
+
+		// 開始描繪
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		glVertexPointer(3, GL_FLOAT, sizeof(Vertex_VT), g_FullScreenQuad[0].m_Position);
 		glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex_VT), g_FullScreenQuad[0].m_Texcoord);
-
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 		glDisable(GL_BLEND);

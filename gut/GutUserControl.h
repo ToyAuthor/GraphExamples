@@ -40,7 +40,7 @@ public:
 	CGutUserControl(void);
 	~CGutUserControl(void);
 
-	void Update(float fTimeAdvance, CONTROLLER_TYPE type);
+//	void Update(float fTimeAdvance, CONTROLLER_TYPE type);
 	void RotateObject(float fTimeAdvance);
 	void SetObjectPosition(Vector4 &vPosition);
 

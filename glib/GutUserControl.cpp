@@ -23,7 +23,7 @@ CGutUserControl::~CGutUserControl()
 {
 }
 
-void CGutUserControl::SetCamera(Vector4 &vEye, float heading, float pitch)
+void CGutUserControl::SetCamera(Vector4 vEye, float heading, float pitch)
 {
 	/*
 	m_vEye = vEye;
@@ -34,7 +34,7 @@ void CGutUserControl::SetCamera(Vector4 &vEye, float heading, float pitch)
 	*/
 }
 
-void CGutUserControl::SetCamera(Vector4 &vEye, Vector4 &vLookAt, Vector4 &vUp)
+void CGutUserControl::SetCamera(Vector4 vEye, Vector4 vLookAt, Vector4 vUp)
 {
 	m_vEye = vEye;
 	m_vLookAt = vLookAt;
@@ -80,7 +80,7 @@ void CGutUserControl::RotateObject(float time_advance)
 {
 	static float rx=0, ry=0;
 
-	// Åª¨ú·Æ¹«
+	// Åªï¿½ï¿½ï¿½Æ¹ï¿½
 	GutMouseInfo mouse;
 	if ( GutReadMouse(&mouse) )
 	{
@@ -88,7 +88,7 @@ void CGutUserControl::RotateObject(float time_advance)
 
 		m_eUP=UP_CUSTOMIZED;
 
-		// ¦pªG«ö¤U·Æ¹«¥ªÁä¡A´N±ÛÂàÃèÀY
+		// ï¿½pï¿½Gï¿½ï¿½ï¿½Uï¿½Æ¹ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½Nï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Y
 		if ( mouse.button[0] ) 
 		{
 			Matrix4x4 rotate_matrix;
@@ -104,7 +104,7 @@ void CGutUserControl::RotateObject(float time_advance)
 			m_ObjectMatrix[3] = vPos;
 		}
 
-		// ¥Îºu½ü¨ÓÁY©ñª«¥ó
+		// ï¿½Îºuï¿½ï¿½ï¿½ï¿½ï¿½Yï¿½ñª«¥ï¿½
 		if ( mouse.z )
 		{
 			float scale = 1.0f + mouse.z / 1000.0f;
@@ -127,13 +127,13 @@ void CGutUserControl::FPSCamera(float time_advance)
 
 	if ( time_advance )
 	{
-		// Åª¨ú·Æ¹«
+		// Åªï¿½ï¿½ï¿½Æ¹ï¿½
 		GutMouseInfo mouse;
 		GutReadMouse(&mouse);
-		// Åª¨úÁä½L
+		// Åªï¿½ï¿½ï¿½ï¿½L
 		GutReadKeyboard(keyboard_state);
-		// ³t«×
-		// ¦pªG«ö¤U·Æ¹«¥ªÁä¡A´N±ÛÂàÃèÀY
+		// ï¿½tï¿½ï¿½
+		// ï¿½pï¿½Gï¿½ï¿½ï¿½Uï¿½Æ¹ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½Nï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Y
 		if ( mouse.button[0] ) 
 		{
 			m_fCameraHeading -= mouse.x * rotation_speed;
@@ -142,7 +142,7 @@ void CGutUserControl::FPSCamera(float time_advance)
 	}
 
 	/*
-	// ·¥®y¼Ð¨t²Î
+	// ï¿½ï¿½ï¿½yï¿½Ð¨tï¿½ï¿½
 	float heading_sin, heading_cos;
 	float pitch_sin, pitch_cos;
 	float up_sin, up_cos;
@@ -158,28 +158,28 @@ void CGutUserControl::FPSCamera(float time_advance)
 	case UP_X:
 		break;
 	case UP_Y:
-		// ­pºâÃèÀYªº­±¦V
+		// ï¿½pï¿½ï¿½ï¿½ï¿½ï¿½Yï¿½ï¿½ï¿½ï¿½ï¿½V
 		camera_facing[0] = pitch_cos * heading_cos;
 		camera_facing[1] = pitch_sin;
 		camera_facing[2] = pitch_cos * heading_sin;
-		// ­pºâÃèÀY¥¿¤W¤èªº¶b¦V
+		// ï¿½pï¿½ï¿½ï¿½ï¿½ï¿½Yï¿½ï¿½ï¿½Wï¿½èªºï¿½bï¿½V
 		camera_up[0] = up_cos * heading_cos;
 		camera_up[1] = up_sin;
 		camera_up[2] = up_cos * heading_sin;
 		break;
 	case UP_Z:
-		// ­pºâÃèÀYªº­±¦V
+		// ï¿½pï¿½ï¿½ï¿½ï¿½ï¿½Yï¿½ï¿½ï¿½ï¿½ï¿½V
 		camera_facing[0] = pitch_cos * heading_cos;
 		camera_facing[2] = pitch_sin;
 		camera_facing[1] = -pitch_cos * heading_sin;
-		// ­pºâÃèÀY¥¿¤W¤èªº¶b¦V
+		// ï¿½pï¿½ï¿½ï¿½ï¿½ï¿½Yï¿½ï¿½ï¿½Wï¿½èªºï¿½bï¿½V
 		camera_up[0] = up_cos * heading_cos;
 		camera_up[2] = up_sin;
 		camera_up[1] = -up_cos * heading_sin;
 		break;
 	}
 
-	// ¨ú±oÃè­±¥k¤èªº¤è¦V
+	// ï¿½ï¿½ï¿½oï¿½è­±ï¿½kï¿½èªºï¿½ï¿½V
 	Vector4 camera_right = Vector3CrossProduct(camera_up, camera_facing);
 	*/
 
@@ -196,33 +196,33 @@ void CGutUserControl::FPSCamera(float time_advance)
 
 	if ( time_advance )
 	{
-		// «ö¤UW©Î¤è¦VÁä¦V¤W
+		// ï¿½ï¿½ï¿½UWï¿½Î¤ï¿½Vï¿½ï¿½Vï¿½W
 		if ( keyboard_state[GUTKEY_W] || keyboard_state[GUTKEY_UP] )
 		{
 			m_vEye += camera_facing * moving_speed;
 		}
-		// «ö¤US©Î¤è¦VÁä¦V¤U
+		// ï¿½ï¿½ï¿½USï¿½Î¤ï¿½Vï¿½ï¿½Vï¿½U
 		if ( keyboard_state[GUTKEY_S] || keyboard_state[GUTKEY_DOWN] )
 		{
 			m_vEye -= camera_facing * moving_speed;
 		}
-		// «ö¤UA©Î¤è¦VÁä¦V¥ª
+		// ï¿½ï¿½ï¿½UAï¿½Î¤ï¿½Vï¿½ï¿½Vï¿½ï¿½
 		if ( keyboard_state[GUTKEY_A] || keyboard_state[GUTKEY_LEFT] )
 		{
 			m_vEye -= camera_right * moving_speed;
 		}
-		// «ö¤UD©Î¤è¦VÁä¦V¥k
+		// ï¿½ï¿½ï¿½UDï¿½Î¤ï¿½Vï¿½ï¿½Vï¿½k
 		if ( keyboard_state[GUTKEY_D] || keyboard_state[GUTKEY_RIGHT] )
 		{
 			m_vEye += camera_right * moving_speed;
 		}
 	}
 
-	// ­pºâ¥XÃèÀY¹ï·ÇªºÂI, ²£¥ÍÃèÀYÂà´«¯x°}®É·|¥Î¨ì.
+	// ï¿½pï¿½ï¿½Xï¿½ï¿½ï¿½Yï¿½ï¿½Çªï¿½ï¿½I, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Yï¿½à´«ï¿½xï¿½}ï¿½É·|ï¿½Î¨ï¿½.
 	m_vLookAt = m_vEye + camera_facing;
-	// ¦]¬°¬O¹ï2­Ó¶bÂà°Ê, »Ý­n§ó·sÃèÀY´Â¤Wªº¶b
+	// ï¿½]ï¿½ï¿½ï¿½Oï¿½ï¿½2ï¿½Ó¶bï¿½ï¿½ï¿½, ï¿½Ý­nï¿½ï¿½sï¿½ï¿½ï¿½Yï¿½Â¤Wï¿½ï¿½ï¿½b
 	m_vUp = camera_up;
-	// ½T»{w = 1
+	// ï¿½Tï¿½{w = 1
 	m_vEye[3] = m_vUp[3] = m_vLookAt[3] = 1.0f;
 
 	UpdateViewMatrix();

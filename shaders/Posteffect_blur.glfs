@@ -1,20 +1,30 @@
 //
 // Pixel Shader
 //
+
+
+/*
+ * 我猜不從外部賦值的話，預設值會代表預設貼圖unit(glActiveTexture無法使用的預設欄位)
+ * glActiveTexture有選取其他貼圖unit的情況才會需要對sampler2D賦值
+ */
 uniform sampler2D ImageSampler;
 
 #define KernelSize 9
 
+
+// 位置的偏移植，C++傳入的
 uniform vec4 vTexOffset[KernelSize];
 
 void main(void)
 {
 	vec4 color = vec4(0,0,0,0);
-	
+
+	// 將周遭位置的顏色疊加起來，還算上了亮度變化
 	for ( int i=0; i<KernelSize; i++ )
 	{
+		// 將指定位置的顏色取出來
 		color += texture2D(ImageSampler, gl_TexCoord[0].xy + vTexOffset[i].xy) * vTexOffset[i].w;
 	}
-	
-	gl_FragColor = color;
+
+	gl_FragColor = color;    // 代表畫面最終得到的顏色，是fragment shader必用的變數
 }

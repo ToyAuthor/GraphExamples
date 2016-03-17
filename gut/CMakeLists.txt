@@ -14,10 +14,12 @@ set(SOURCE
 	GutTexture_OpenGL.cpp
 	GutFileUtility.cpp
 	GutModel.cpp
+	GutModel_OpenGL.cpp
 	Vector4.cpp
 	GutTGA.cpp
 	GutBMP.cpp
 	GutImage.cpp
+	GutTimer.cpp
 )
 
 add_definitions( -DWIN32_MEAN_AND_LEAN -DGLEW_STATIC -DVC_EXTRALEAN -DGLEW_BUILD -D_CRT_SECURE_NO_WARNINGS )

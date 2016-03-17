@@ -51,6 +51,7 @@ typedef Display* HINSTANCE;
 #include "Matrix4x4.h"
 
 Matrix4x4 GutMatrixLookAtRH(Vector4 &eye, Vector4 &lookat, Vector4 &up);
+Matrix4x4 GutMatrixPerspectiveRH_OpenGL(float fovy, float aspect, float z_near, float z_far);
 void GutSetShaderPath(const char *path);
 const char *GutGetShaderPath();
 

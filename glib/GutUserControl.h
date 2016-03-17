@@ -46,8 +46,8 @@ public:
 
 	void FPSCamera(float fTimeAdvance);
 
-	void SetCamera(Vector4 &vEye, float fHeading, float fPitch);
-	void SetCamera(Vector4 &vEye, Vector4 &vLookAt, Vector4 &vUp);
+	void SetCamera(Vector4 vEye, float fHeading, float fPitch);
+	void SetCamera(Vector4 vEye, Vector4 vLookAt, Vector4 vUp);
 	void UpdateViewMatrix(void);
 
 	void SetUpAxis(UP_AXIS axis) { m_eUP = axis; };

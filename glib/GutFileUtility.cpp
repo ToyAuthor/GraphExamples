@@ -30,7 +30,7 @@ void *GutLoadBinaryStream(const char *filename, unsigned int *size)
 
 void GutReleaseBinaryStream(const void *buffer)
 {
-	delete [] buffer;
+	delete [] static_cast<unsigned char*>(const_cast<void*>(buffer));
 }
 
 void *GutLoadFileStream(const char *filename, unsigned int *size=NULL)

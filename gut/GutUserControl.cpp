@@ -57,7 +57,7 @@ void CGutUserControl::UpdateViewMatrix(void)
 	m_CameraMatrix = m_ViewMatrix;
 	m_CameraMatrix.FastInvert();
 }
-
+/*
 void CGutUserControl::Update(float time_advance, CONTROLLER_TYPE type)
 {
 	m_eControllerType = type;
@@ -75,7 +75,7 @@ void CGutUserControl::Update(float time_advance, CONTROLLER_TYPE type)
 		break;
 	}
 }
-
+*/
 
 void CGutUserControl::SetObjectPosition(Vector4 &vPosition)
 {
